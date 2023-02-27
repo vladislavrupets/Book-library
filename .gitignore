@@ -24,4 +24,4 @@ yarn-debug.log*
 yarn-error.log*
 frontend/.env
 backend/.env
-backend/db-config.js
+
