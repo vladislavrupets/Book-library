@@ -1,10 +1,11 @@
 const Pool = require("pg").Pool;
-const pool = new Pool({
-  user: "postgres",
-  password: "1111",
-  host: "localhost",
-  port: "5432",
-  database: "BookLibrary",
-});
 
-module.exports = pool;
+module.exports = function adaptivePool(userRole = "guest") {
+  const pool = new Pool({
+    user: `${userRole}`,
+    password: process.env[`${userRole}_pass`],
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    database: process.env.DB_NAME,
+  });
+};
