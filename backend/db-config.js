@@ -8,4 +8,5 @@ module.exports = function adaptivePool(userRole = "guest") {
     port: process.env.DB_PORT,
     database: process.env.DB_NAME,
   });
+  return pool;
 };
