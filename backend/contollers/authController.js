@@ -3,7 +3,7 @@ const sha256 = require("sha256");
 const pgPool = require("../db-config");
 
 class AuthController {
-  async signUp(req, res) {
+  async register(req, res) {
     const { login, password, full_name, phone_number, trust_raiting } =
       req.body;
 
@@ -34,13 +34,13 @@ class AuthController {
             .json({ error: "User with the same phone number already exists." });
         }
       } else {
-        console.log(err);
+        console.error(err);
         res.status(500).json({ error: "Internal Server Error." });
       }
     }
   }
 
-  async signIn(req, res) {
+  async login(req, res) {
     const { login, password } = req.body;
 
     try {
@@ -50,13 +50,32 @@ class AuthController {
       );
 
       if (!userCategory.rowCount) {
+        console.log(userCategory);
         res.status(401).json({ error: "Invalid username or password." });
       } else {
         res.status(200).json({ message: "Authentication successful." });
       }
     } catch (err) {
-      console.log(err);
-      res.status(500).json({ error: "Internal Server Error." });
+      console.error(err);
+      res.status(500).send();
+    }
+  }
+
+  async logout(req, res) {
+    try {
+      await req.session.destroy();
+      res.status(200).send();
+    } catch (err) {
+      console.error(err);
+      res.status(500).send();
+    }
+  }
+
+  async fetchUser(req, res) {
+    if (req.sessionID && req.session.user) {
+      res.status(200).json({ user: req.session.user });
+    } else {
+      res.status(403);
     }
   }
 }

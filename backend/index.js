@@ -13,6 +13,7 @@ const IP = process.env.IP || "localhost";
 
 app.use(
   cors({
+    origin: "http://localhost:3000",
     methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
     credentials: true,
   })
