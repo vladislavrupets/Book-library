@@ -42,7 +42,6 @@ class AuthController {
 
   async login(req, res) {
     const { login, password } = req.body;
-
     try {
       const userCategory = await pgPool().query(
         `select category from Users where Users.login = $1 and Users.password = $2`,
@@ -50,7 +49,6 @@ class AuthController {
       );
 
       if (!userCategory.rowCount) {
-        console.log(userCategory);
         res.status(401).json({ error: "Invalid username or password." });
       } else {
         res.status(200).json({ message: "Authentication successful." });

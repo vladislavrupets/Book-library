@@ -1,23 +1,29 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 import "./authPages.css";
-import { login } from "../../store/authSlice";
+import { selectAuth, login } from "../../store/authSlice";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
-  const { status, error } = useSelector((state) => state.auth);
 
-  const [log, setLogin] = useState("");
+  const [error, setError] = useState("");
+  const [Login, setLogin] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(login({ login, password }));
-    navigate("/main");
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    dispatch(login({ login: Login, password }))
+      .unwrap()
+      .then((res) => {
+        navigate("/main");
+      })
+      .catch((err) => {
+        setError(err.error);
+      });
   };
 
   return (
@@ -25,10 +31,10 @@ const LoginPage = () => {
       <h2 className="auth-header">Login</h2>
       <span className="auth-error">{error}</span>
       <input
-        className={log ? "auth-input valid" : "auth-input"}
+        className={Login ? "auth-input valid" : "auth-input"}
         type="text"
         placeholder="Login"
-        value={log}
+        value={Login}
         onChange={(e) => setLogin(e.target.value)}
       />
       <input
@@ -40,8 +46,8 @@ const LoginPage = () => {
       />
 
       <button
-        disabled={!(log && password)}
-        className={log && password ? "submit-btn active" : "submit-btn"}
+        disabled={!(Login && password)}
+        className={Login && password ? "submit-btn active" : "submit-btn"}
       >
         Log in
       </button>

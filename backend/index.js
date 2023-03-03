@@ -11,6 +11,8 @@ const authRoutes = require("./routes/authRoutes");
 const PORT = process.env.PORT || 8000;
 const IP = process.env.IP || "localhost";
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -18,8 +20,6 @@ app.use(
     credentials: true,
   })
 );
-
-app.use(express.json());
 
 app.use(
   session({
