@@ -1,11 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import axios from "../utilities/axiosConfig";
-import {
-  saveSession,
-  loadSession,
-  clearSession,
-} from "../utilities//sessionCookies";
 
 export const register = createAsyncThunk(
   "auth/register",
@@ -24,7 +19,6 @@ export const login = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const data = await axios.post("/user/login", userData);
-      saveSession(data.user.sessionId);
       return data.user;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -37,7 +31,6 @@ export const logout = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const data = await axios.post("/user/logout");
-      clearSession();
       return data.user;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -50,7 +43,6 @@ export const fetchUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const data = await axios.get("/user/fetch-user");
-      loadSession();
       return data.user;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -125,7 +117,5 @@ const authSlice = createSlice({
     },
   },
 });
-
-export const selectAuth = (state) => state.auth;
 
 export default authSlice.reducer;

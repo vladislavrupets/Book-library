@@ -16,11 +16,13 @@ class AuthController {
       );
 
       const user = data.rows[0];
-      req.session.user = user;
-
+      req.session.user = {
+        id: user.id,
+        full_name: user.full_name,
+        category: user.category,
+      };
       res.status(200).json({
         message: `User ${login} registered successfully.`,
-        user: req.session.user,
       });
     } catch (err) {
       if (err.code === "23505") {
@@ -43,14 +45,20 @@ class AuthController {
   async login(req, res) {
     const { login, password } = req.body;
     try {
-      const userCategory = await pgPool().query(
-        `select category from Users where Users.login = $1 and Users.password = $2`,
+      const data = await pgPool().query(
+        `select 1 from Users where Users.login = $1 and Users.password = $2`,
         [login, sha256(password)]
       );
 
-      if (!userCategory.rowCount) {
+      if (!data.rowCount) {
         res.status(401).json({ error: "Invalid username or password." });
       } else {
+        const user = data.rows[0];
+        req.session.user = {
+          id: user.id,
+          full_name: user.full_name,
+          category: user.category,
+        };
         res.status(200).json({ message: "Authentication successful." });
       }
     } catch (err) {
@@ -62,6 +70,7 @@ class AuthController {
   async logout(req, res) {
     try {
       await req.session.destroy();
+      res.clearCookie("connect.sid");
       res.status(200).send();
     } catch (err) {
       console.error(err);
@@ -70,7 +79,11 @@ class AuthController {
   }
 
   async fetchUser(req, res) {
-    if (req.sessionID && req.session.user) {
+    if (
+      req.sessionID &&
+      req.session.user &&
+      req.sessionID === req.session.user.sessionId
+    ) {
       res.status(200).json({ user: req.session.user });
     } else {
       res.status(403);
