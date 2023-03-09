@@ -5,18 +5,19 @@ const pgPool = require("../db-config");
 class AuthController {
   async register(req, res) {
     const { fullName, phoneNumber, login, password, trustRaiting } = req.body;
-    console.log(req.body);
     try {
       const data = await pgPool().query(
         `insert into Users
             (full_name, phone_number, login, password, trust_rating) 
-            values ($1, $2, $3, $4, $5)`,
+            values ($1, $2, $3, $4, $5)
+            returning *`,
         [fullName, phoneNumber, login, password, trustRaiting]
       );
 
       const user = data.rows[0];
+      console.log(data);
       req.session.user = {
-        id: user.id,
+        id: user.user_id,
         full_name: user.full_name,
         category: user.category,
       };
