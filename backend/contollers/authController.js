@@ -4,15 +4,14 @@ const pgPool = require("../db-config");
 
 class AuthController {
   async register(req, res) {
-    const { login, password, full_name, phone_number, trust_raiting } =
-      req.body;
-
+    const { fullName, phoneNumber, login, password, trustRaiting } = req.body;
+    console.log(req.body);
     try {
       const data = await pgPool().query(
         `insert into Users
-            (login, password, full_name, phone_number, trust_rating) 
+            (full_name, phone_number, login, password, trust_rating) 
             values ($1, $2, $3, $4, $5)`,
-        [login, password, full_name, phone_number, trust_raiting]
+        [fullName, phoneNumber, login, password, trustRaiting]
       );
 
       const user = data.rows[0];
@@ -21,6 +20,7 @@ class AuthController {
         full_name: user.full_name,
         category: user.category,
       };
+
       res.status(200).json({
         message: `User ${login} registered successfully.`,
       });
@@ -30,35 +30,39 @@ class AuthController {
           res.status(400).json({
             error: `User with the same login already exists`,
           });
+          return;
         } else if (err.constraint === "users_phone_number_key") {
           res
             .status(400)
             .json({ error: "User with the same phone number already exists." });
+          return;
         }
       } else {
         console.error(err);
-        res.status(500).json({ error: "Internal Server Error." });
+        res.status(500).send();
       }
     }
   }
 
   async login(req, res) {
     const { login, password } = req.body;
+    console.log(req.body);
     try {
       const data = await pgPool().query(
-        `select 1 from Users where Users.login = $1 and Users.password = $2`,
+        `select * from Users where Users.login = $1 and Users.password = $2`,
         [login, sha256(password)]
       );
-
-      if (!data.rowCount) {
+      if (data.rowCount === 0) {
         res.status(401).json({ error: "Invalid username or password." });
+        return;
       } else {
         const user = data.rows[0];
         req.session.user = {
-          id: user.id,
+          user_id: user.user_id,
           full_name: user.full_name,
           category: user.category,
         };
+
         res.status(200).json({ message: "Authentication successful." });
       }
     } catch (err) {
@@ -79,14 +83,10 @@ class AuthController {
   }
 
   async fetchUser(req, res) {
-    if (
-      req.sessionID &&
-      req.session.user &&
-      req.sessionID === req.session.user.sessionId
-    ) {
+    if (req.sessionID && req.session.user) {
       res.status(200).json({ user: req.session.user });
     } else {
-      res.status(403);
+      res.status(403).json({ user: { category: "guest" } });
     }
   }
 }

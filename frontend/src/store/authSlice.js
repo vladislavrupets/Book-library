@@ -6,8 +6,8 @@ export const register = createAsyncThunk(
   "auth/register",
   async (userData, { rejectWithValue }) => {
     try {
-      const data = await axios.post("/user/register", userData);
-      return data.user;
+      const res = await axios.post("/user/register", userData);
+      return res.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
@@ -18,8 +18,8 @@ export const login = createAsyncThunk(
   "auth/login",
   async (userData, { rejectWithValue }) => {
     try {
-      const data = await axios.post("/user/login", userData);
-      return data.user;
+      const res = await axios.post("/user/login", userData);
+      return res.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
@@ -30,8 +30,7 @@ export const logout = createAsyncThunk(
   "auth/logout",
   async (_, { rejectWithValue }) => {
     try {
-      const data = await axios.post("/user/logout");
-      return data.user;
+      await axios.post("/user/logout");
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
@@ -42,8 +41,8 @@ export const fetchUser = createAsyncThunk(
   "auth/fetch-user",
   async (_, { rejectWithValue }) => {
     try {
-      const data = await axios.get("/user/fetch-user");
-      return data.user;
+      const res = await axios.get("/user/fetch-user");
+      return res.data.user;
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
@@ -99,7 +98,7 @@ const authSlice = createSlice({
     [logout.rejected]: (state, action) => {
       state.status = "rejected";
       state.user = null;
-      state.error = action.payload.error;
+      state.error = action.payload;
     },
 
     //fetchUser
@@ -113,9 +112,11 @@ const authSlice = createSlice({
     },
     [fetchUser.rejected]: (state, action) => {
       state.status = "rejected";
-      state.error = action.payload.error;
+      state.error = action.payload;
     },
   },
 });
+
+export const {} = authSlice.actions;
 
 export default authSlice.reducer;

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import "./authPages.css";
 import { login } from "../../store/authSlice";
@@ -9,20 +9,30 @@ const LoginPage = () => {
   const dispatch = useDispatch();
 
   const [error, setError] = useState("");
+
   const [Login, setLogin] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
-  const handleSubmit = (event) => {
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    dispatch(login({ login: Login, password }))
-      .unwrap()
-      .then(() => {
-        navigate("/");
-      })
-      .catch((err) => {
-        setError(err.error);
-      });
+    try {
+      await dispatch(login({ login: Login, password })).unwrap();
+      navigate("/");
+    } catch (err) {
+      setError(err.error);
+    }
+
+    // dispatch(login({ login: Login, password }))
+    //   .unwrap()
+    //   .then((user) => {
+    //     console.log(user);
+    //     //
+    //   })
+    //   .catch((err) => {
+    //     setError(err.error);
+    //   });
   };
 
   return (
