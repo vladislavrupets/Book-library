@@ -1,6 +1,6 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import "./authPages.css";
 import { login } from "../../store/authSlice";
@@ -23,16 +23,6 @@ const LoginPage = () => {
     } catch (err) {
       setError(err.error);
     }
-
-    // dispatch(login({ login: Login, password }))
-    //   .unwrap()
-    //   .then((user) => {
-    //     console.log(user);
-    //     //
-    //   })
-    //   .catch((err) => {
-    //     setError(err.error);
-    //   });
   };
 
   return (
