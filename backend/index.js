@@ -1,11 +1,10 @@
 const express = require("express");
 const app = express();
-const session = require("express-session");
-const pgSession = require("connect-pg-simple")(session);
 const cors = require("cors");
 require("dotenv").config();
 
-const pgPool = require("./db-config");
+const Session = require("./services/sessionService");
+
 const authRoutes = require("./routes/authRoutes");
 
 const PORT = process.env.PORT || 8000;
@@ -21,18 +20,7 @@ app.use(
   })
 );
 
-app.use(
-  session({
-    store: new pgSession({
-      pool: pgPool("postgres"),
-      tableName: "sessions",
-    }),
-    secret: process.env.COOKIE_SECRET,
-    saveUninitialized: false,
-    resave: false,
-    cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 },
-  })
-);
+app.use(Session);
 
 app.use("/user", authRoutes);
 

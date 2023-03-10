@@ -1,11 +1,24 @@
 const Router = require("express");
 const router = new Router();
 
-const authController = require("../contollers/authController");
+const AuthController = require("../contollers/authController");
+const UserServise = require("../services/postgre-services/userService");
 
-router.post("/register", authController.register);
-router.post("/login", authController.login);
-router.post("/logout", authController.logout);
-router.get("/fetch-user", authController.fetchUser);
+let role = "";
+
+router.use((req, res, next) => {
+  role = req.body.category;
+  next();
+});
+
+const userServise = new UserServise(role);
+const authController = new AuthController(userServise);
+
+router
+  .route("/")
+  .post("/register", authController.register)
+  .post("/login", authController.login)
+  .post("/logout", authController.logout)
+  .get("/fetch-user", authController.fetchUser);
 
 module.exports = router;

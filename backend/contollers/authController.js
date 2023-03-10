@@ -1,75 +1,61 @@
 const sha256 = require("sha256");
 
-const pgPool = require("../db-config");
+module.exports = class AuthController {
+  constructor(service) {
+    userService = service;
+  }
 
-class AuthController {
-  async register(req, res) {
-    const { fullName, phoneNumber, login, password, trustRaiting } = req.body;
-    try {
-      const data = await pgPool().query(
-        `insert into Users
-            (full_name, phone_number, login, password, trust_rating) 
-            values ($1, $2, $3, $4, $5)
-            returning *`,
-        [fullName, phoneNumber, login, password, trustRaiting]
-      );
-
-      const user = data.rows[0];
-      console.log(data);
-      req.session.user = {
-        id: user.user_id,
-        full_name: user.full_name,
-        category: user.category,
-      };
-
-      res.status(200).json({
-        message: `User ${login} registered successfully.`,
-      });
-    } catch (err) {
-      if (err.code === "23505") {
-        if (err.constraint === "users_login_key") {
-          res.status(400).json({
-            error: `User with the same login already exists`,
-          });
-          return;
-        } else if (err.constraint === "users_phone_number_key") {
-          res
-            .status(400)
-            .json({ error: "User with the same phone number already exists." });
-          return;
+  register(req, res) {
+    const user = req.body;
+    userService.createUser(user, (err, newUser) => {
+      if (err) {
+        if (err.code === 400) {
+          res.status(400).json(err.message);
+        } else {
+          res.status(500).send();
         }
       } else {
-        console.error(err);
-        res.status(500).send();
+        try {
+          req.session.user = {
+            user_id: newUser.user_id,
+            full_name: newUser.full_name,
+            category: newUser.category,
+          };
+          res.status(200).send();
+        } catch (err) {
+          res.status(500).send();
+        }
       }
-    }
+    });
   }
 
   async login(req, res) {
-    const { login, password } = req.body;
-    console.log(req.body);
-    try {
-      const data = await pgPool().query(
-        `select * from Users where Users.login = $1 and Users.password = $2`,
-        [login, sha256(password)]
-      );
-      if (data.rowCount === 0) {
-        res.status(401).json({ error: "Invalid username or password." });
-        return;
-      } else {
-        const user = data.rows[0];
-        req.session.user = {
-          user_id: user.user_id,
-          full_name: user.full_name,
-          category: user.category,
-        };
+    const encPass = sha256(req.body.password);
+    const user = {
+      login: req.body.login,
+      password: encPass,
+    };
 
-        res.status(200).json({ message: "Authentication successful." });
+    userService.getUserByData(user, (err, userInfo) => {
+      if (err) {
+        if (err.code === 401) {
+          res.status(401).json(err.message);
+        } else {
+          res.status(500).send();
+        }
+      } else {
+        try {
+          req.session.user = {
+            user_id: userInfo.user_id,
+            full_name: userInfo.full_name,
+            category: userInfo.category,
+          };
+          res.status(200).send();
+        } catch (err) {
+          res.status(500).send();
+        }
       }
-    } catch (err) {
-      console.error(err);
-      res.status(500).send();
-    }
+    });
   }
 
   async logout(req, res) {
@@ -90,6 +76,4 @@ class AuthController {
       res.status(403).json({ user: { category: "guest" } });
     }
   }
-}
-
-module.exports = new AuthController();
+};
