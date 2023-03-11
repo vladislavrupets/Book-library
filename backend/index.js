@@ -5,7 +5,7 @@ require("dotenv").config();
 
 const Session = require("./services/sessionService");
 
-const authRoutes = require("./routes/authRoutes");
+const routes = require("./routes/index");
 
 const PORT = process.env.PORT || 8000;
 const IP = process.env.IP || "localhost";
@@ -22,7 +22,7 @@ app.use(
 
 app.use(Session);
 
-app.use("/user", authRoutes);
+app.use("/", routes);
 
 app.listen(PORT, IP, () => {
   console.log("server started on " + IP + ":" + PORT);

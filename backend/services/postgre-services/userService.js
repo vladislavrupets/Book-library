@@ -1,10 +1,6 @@
-const pgPool = require("./db-config");
+const pgPool = require("./dbConfig");
 
-module.exports = class UserServise {
-  constructor(role) {
-    category = role;
-  }
-
+class UserServise {
   async getUsers(callback) {
     try {
       const data = await pgPool(category).query("select * from Users");
@@ -19,7 +15,7 @@ module.exports = class UserServise {
 
   async getUserByData(user, callback) {
     try {
-      const data = await pgPool(category).query(
+      const data = await pgPool(this.category).query(
         `select * from Users where Users.login = $1 and Users.password = $2`,
         [user.login, user.password]
       );
@@ -44,7 +40,7 @@ module.exports = class UserServise {
 
   async createUser(user, callback) {
     try {
-      const data = await pgPool(category).query(
+      const data = await pgPool(this.category).query(
         `insert into Users
             (full_name, phone_number, login, password, trust_rating) 
             values ($1, $2, $3, $4, $5)
@@ -76,7 +72,7 @@ module.exports = class UserServise {
     }
   }
 
-  async deleteUser(user, callback) {
+  async deleteUser(category, user, callback) {
     try {
       await pgPool(category).query(`delete from users where user_id = $1`, [
         user.user_id,
@@ -88,4 +84,6 @@ module.exports = class UserServise {
       callback(customError);
     }
   }
-};
+}
+
+module.exports = new UserServise();

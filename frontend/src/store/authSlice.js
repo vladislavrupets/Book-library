@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import axios from "../utilities/axiosConfig";
+import Axios from "../utilities/axiosConfig";
 
 export const register = createAsyncThunk(
   "auth/register",
   async (userData, { rejectWithValue }) => {
     try {
-      const res = await axios.post("/user/register", userData);
+      const res = await Axios.post("/auth/register", userData);
       return res.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -18,7 +18,7 @@ export const login = createAsyncThunk(
   "auth/login",
   async (userData, { rejectWithValue }) => {
     try {
-      const res = await axios.post("/user/login", userData);
+      const res = await Axios.post("/auth/login", userData);
       return res.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -30,7 +30,7 @@ export const logout = createAsyncThunk(
   "auth/logout",
   async (_, { rejectWithValue }) => {
     try {
-      await axios.post("/user/logout");
+      await Axios.post("/auth/logout");
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
@@ -41,7 +41,7 @@ export const fetchUser = createAsyncThunk(
   "auth/fetch-user",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await axios.get("/user/fetch-user");
+      const res = await Axios.get("/auth/fetch-user");
       return res.data.user;
     } catch (err) {
       return rejectWithValue(err.response.data);

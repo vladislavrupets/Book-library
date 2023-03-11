@@ -1,10 +1,8 @@
 const sha256 = require("sha256");
 
-module.exports = class AuthController {
-  constructor(service) {
-    userService = service;
-  }
+const userService = require("../services/postgre-services/userService");
 
+class AuthController {
   register(req, res) {
     const user = req.body;
     userService.createUser(user, (err, newUser) => {
@@ -73,7 +71,9 @@ module.exports = class AuthController {
     if (req.sessionID && req.session.user) {
       res.status(200).json({ user: req.session.user });
     } else {
-      res.status(403).json({ user: { category: "guest" } });
+      res.status(200).json({ user: { category: "guest" } });
     }
   }
-};
+}
+
+module.exports = new AuthController();

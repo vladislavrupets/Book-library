@@ -18,6 +18,7 @@ const LoginPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+      console.log(111);
       await dispatch(login({ login: Login, password })).unwrap();
       navigate("/");
     } catch (err) {

@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -6,6 +7,7 @@ import "./App.css";
 import MainPage from "./components/main-page/MainPage";
 import LoginPage from "./components/auth-pages/LoginPage";
 import RegisterPage from "./components/auth-pages/RegisterPage";
+import { fetchUser } from "./store/authSlice";
 
 function App() {
   return (
