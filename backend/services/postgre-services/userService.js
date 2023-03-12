@@ -1,7 +1,7 @@
 const pgPool = require("./dbConfig");
 
 class UserServise {
-  async getUsers(callback) {
+  async getUsers(category, callback) {
     try {
       const data = await pgPool(category).query("select * from Users");
       callback(null, data.rows);
@@ -15,7 +15,7 @@ class UserServise {
 
   async getUserByData(user, callback) {
     try {
-      const data = await pgPool(this.category).query(
+      const data = await pgPool(user.category).query(
         `select * from Users where Users.login = $1 and Users.password = $2`,
         [user.login, user.password]
       );
@@ -40,7 +40,7 @@ class UserServise {
 
   async createUser(user, callback) {
     try {
-      const data = await pgPool(this.category).query(
+      const data = await pgPool(user.category).query(
         `insert into Users
             (full_name, phone_number, login, password, trust_rating) 
             values ($1, $2, $3, $4, $5)
@@ -72,11 +72,12 @@ class UserServise {
     }
   }
 
-  async deleteUser(category, user, callback) {
+  async deleteUser(user, callback) {
     try {
-      await pgPool(category).query(`delete from users where user_id = $1`, [
-        user.user_id,
-      ]);
+      await pgPool(user.category).query(
+        `delete from users where user_id = $1`,
+        [user.user_id]
+      );
     } catch (err) {
       console.error(err);
       const customError = new Error();

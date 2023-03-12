@@ -28,12 +28,11 @@ class AuthController {
   }
 
   async login(req, res) {
-    const encPass = sha256(req.body.password);
     const user = {
       login: req.body.login,
-      password: encPass,
+      password: sha256(req.body.password),
+      category: req.body.category,
     };
-
     userService.getUserByData(user, (err, userInfo) => {
       if (err) {
         if (err.code === 401) {
@@ -58,6 +57,7 @@ class AuthController {
 
   async logout(req, res) {
     try {
+      console.log(req.body);
       await req.session.destroy();
       res.clearCookie("connect.sid");
       res.status(200).send();
