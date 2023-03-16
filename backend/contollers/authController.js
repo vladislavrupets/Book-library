@@ -4,8 +4,8 @@ const userService = require("../services/postgre-services/userService");
 
 class AuthController {
   register(req, res) {
-    const user = req.body;
-    userService.createUser(user, (err, newUser) => {
+    const { user } = req.body;
+    userService.createUser(user, "connect_user", (err, newUser) => {
       if (err) {
         if (err.code === 400) {
           res.status(400).json(err.message);
@@ -28,12 +28,12 @@ class AuthController {
   }
 
   async login(req, res) {
-    const user = {
-      login: req.body.login,
-      password: sha256(req.body.password),
-      category: req.body.category,
+    const { user } = req.body;
+    const _user = {
+      login: user.login,
+      password: sha256(user.password),
     };
-    userService.getUserByData(user, (err, userInfo) => {
+    userService.getUserByData(_user, "connect_user", (err, userInfo) => {
       if (err) {
         if (err.code === 401) {
           res.status(401).json(err.message);

@@ -4,7 +4,6 @@ const cors = require("cors");
 require("dotenv").config();
 
 const Session = require("./services/sessionService");
-
 const routes = require("./routes/index");
 
 const PORT = process.env.PORT || 8000;

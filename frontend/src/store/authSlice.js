@@ -4,9 +4,9 @@ import Axios from "../utilities/axiosConfig";
 
 export const register = createAsyncThunk(
   "auth/register",
-  async (userData, { rejectWithValue }) => {
+  async (user, { rejectWithValue }) => {
     try {
-      const res = await Axios.post("/auth/register", userData);
+      const res = await Axios.post("/auth/register", { user });
       return res.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -16,9 +16,9 @@ export const register = createAsyncThunk(
 
 export const login = createAsyncThunk(
   "auth/login",
-  async (userData, { rejectWithValue }) => {
+  async (user, { rejectWithValue }) => {
     try {
-      const res = await Axios.post("/auth/login", userData);
+      const res = await Axios.post("/auth/login", { user });
       return res.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
