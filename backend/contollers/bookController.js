@@ -1,5 +1,3 @@
-const sha256 = require("sha256");
-
 const bookService = require("../services/postgre-services/bookService");
 
 class BookController {

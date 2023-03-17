@@ -15,6 +15,8 @@ class BookServise {
 
   async getBookByData(book, category, callback) {
     try {
+      const authorsNames = book.authors.map((author) => author.name);
+      //checking the book for uniqueness
       const data = await pgPool(category).query(
         `select b.book_id, wr.title, au.full_name, g.genre_name, p.publisher_name, b.release_year, b.pages_count, b.quantity
         from Book b
@@ -31,7 +33,7 @@ class BookServise {
           and p.publisher_name = $5`,
         [
           book.title,
-          book.authorsNames,
+          authorsNames,
           book.genres,
           book.releaseYear,
           book.publisher,
@@ -57,6 +59,30 @@ class BookServise {
   }
 
   async createBook(book, category, callback) {
+    //function to get new and existing IDs of authors
+    const getAuthorsIds = async () => {
+      const newAuthorsNames = book.authors
+        .filter((author) => author.isNew)
+        .map((author) => author.name);
+
+      let newAuthorsIds = null;
+      if (newAuthorsNames.length !== 0) {
+        const authorsData = await client.query(
+          `insert into Author(full_name) 
+            select unnest($1::varchar[])
+            returning author_id`,
+          [newAuthorsNames]
+        );
+        newAuthorsIds = authorsData.rows.map(
+          (authorData) => authorData.author_id
+        );
+      }
+      const existAuthorsIds = book.authors
+        .filter((author) => author.id)
+        .map((author) => author.id);
+      return [...existAuthorsIds, ...newAuthorsIds];
+    };
+    //extract client for transaction
     const client = await pgPool(category).connect();
 
     try {
@@ -69,13 +95,7 @@ class BookServise {
             returning genre_id`,
         [book.genres]
       );
-
-      const authorsData = await client.query(
-        `insert into Author(full_name) 
-            select unnest($1::varchar[])
-            returning author_id`,
-        [book.authorsNames]
-      );
+      const genresIds = genresData.rows.map((genredata) => genredata.genre_id);
 
       const writingData = await client.query(
         `insert into Writing(title)
@@ -83,12 +103,7 @@ class BookServise {
             returning writing_id`,
         [book.title]
       );
-
-      const genresIds = genresData.rows.map((genredata) => genredata.genre_id);
       const writingId = writingData.rows[0].writing_id;
-      const authorsIds = authorsData.rows.map(
-        (authorData) => authorData.author_id
-      );
 
       await client.query(
         `insert into WritingGenre(writing_num, genre_num)
@@ -96,6 +111,7 @@ class BookServise {
         [writingId, genresIds]
       );
 
+      const authorsIds = await getAuthorsIds();
       await client.query(
         `insert into WritingAuthor(writing_num, author_num)
             select $1, unnest($2::uuid[])`,
@@ -105,10 +121,10 @@ class BookServise {
       const publisherData = await client.query(
         `insert into Publisher(publisher_name)
             values ($1)
+            on conflict(publisher_name) do update set publisher_name = excluded.publisher_name
             returning publisher_id`,
         [book.publisher]
       );
-
       const publisherId = publisherData.rows[0].publisher_id;
 
       await client.query(
@@ -125,6 +141,7 @@ class BookServise {
       );
 
       await client.query("commit");
+      callback(null);
     } catch (err) {
       await client.query("rollback");
 
