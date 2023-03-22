@@ -4,8 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import "./mainPage.css";
 import NaviBar from "./navibar/NaviBar";
-import Body from "./body/Body";
-import DashSidebar from "./dashboaed-components/dash-sidebar/DashSidebar";
+import MainBody from "./main-body/MainBody";
+import DashSidebar from "./dashboard-components/dash-sidebar/DashSidebar";
 import { fetchUser } from "../../store/authSlice";
 
 const MainPage = () => {
@@ -29,7 +29,7 @@ const MainPage = () => {
         ) : null}
 
         <main className="inner-container__content">
-          <Body />
+          <MainBody />
         </main>
       </div>
     </div>
