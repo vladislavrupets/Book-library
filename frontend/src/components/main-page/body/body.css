@@ -1,0 +1,22 @@
+.main-page-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.carousel-container {
+  display: flex;
+  width: 500px;
+  height: 500px;
+  background-color: blue;
+  margin-bottom: 50px;
+}
+
+.carousel-slide {
+  flex-grow: 1;
+}
+
+.carousel__small-item {
+  display: flex;
+  background-color: brown;
+}

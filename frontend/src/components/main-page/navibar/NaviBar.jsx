@@ -1,12 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Navbar, Nav, NavDropdown, Container, Row, Col } from "react-bootstrap";
 
+import "./naviBar.css";
 import { logout } from "../../../store/authSlice";
 
 const Header = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
+  console.log(user);
 
   const navigate = useNavigate();
 
@@ -21,35 +22,29 @@ const Header = () => {
   };
 
   return (
-    <>
-      <Navbar bg="light" expand="lg">
-        <Container>
-          <Navbar.Brand href="/">BookLibrary</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
-              <Nav.Link href="#home">Books</Nav.Link>
-            </Nav>
-            <Nav>
-              {user ? (
-                user.category !== "guest" ? (
-                  <NavDropdown title="Account" id="basic-nav-dropdown">
-                    <NavDropdown.Divider />
-                    <NavDropdown.Item onClick={handleLogout}>
-                      Logout
-                    </NavDropdown.Item>
-                  </NavDropdown>
-                ) : (
-                  <Nav.Link href="/login">Login</Nav.Link>
-                )
-              ) : (
-                <></>
-              )}
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-    </>
+    <nav className="navi-bar">
+      <div className="navi-bar__items-container">
+        <div className="navi-bar__logo">Book Library</div>
+        <div className="navi-bar__item">Library</div>
+        <div className="navi-bar__item">Top books</div>
+      </div>
+      <div>Search books</div>
+
+      {user?.category === "guest" ? (
+        <div className="navi-bar__items-container">
+          <div className="navi-bar__item" onClick={() => navigate("/login")}>
+            Login
+          </div>
+        </div>
+      ) : (
+        <div className="navi-bar__items-container">
+          <div className="navi-bar__item">Account</div>
+          <div className="navi-bar__item" onClick={handleLogout}>
+            Log out
+          </div>
+        </div>
+      )}
+    </nav>
   );
 };
 

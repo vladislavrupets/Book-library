@@ -1,0 +1,8 @@
+.dash-sidebar {
+  display: flex;
+  flex-direction: column;
+}
+
+.dash-sidebar__item {
+  margin-left: 10px;
+}

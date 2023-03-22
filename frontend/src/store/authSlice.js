@@ -84,6 +84,7 @@ const authSlice = createSlice({
     [login.rejected]: (state, action) => {
       state.status = "rejected";
       state.error = action.payload;
+      console.log(action);
     },
 
     //logout

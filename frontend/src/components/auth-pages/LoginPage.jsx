@@ -22,7 +22,7 @@ const LoginPage = () => {
       await dispatch(login({ login: Login, password })).unwrap();
       navigate("/");
     } catch (err) {
-      setError(err.error);
+      setError(err);
     }
   };
 
