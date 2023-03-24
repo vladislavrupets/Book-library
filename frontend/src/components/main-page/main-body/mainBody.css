@@ -1,23 +1,16 @@
-.main-page-body {
+.main-body {
   display: flex;
   flex: 1;
   flex-direction: column;
   align-items: center;
 }
 
-.carousel-container {
+.main-body__item {
   display: flex;
-  width: 500px;
-  height: 500px;
-  background-color: blue;
-  margin-bottom: 50px;
+  width: 100%;
 }
 
-.carousel-slide {
-  flex-grow: 1;
-}
-
-.carousel__small-item {
-  display: flex;
-  background-color: brown;
+.main-body__slider {
+  width: 1500px;
+  margin: 20px;
 }

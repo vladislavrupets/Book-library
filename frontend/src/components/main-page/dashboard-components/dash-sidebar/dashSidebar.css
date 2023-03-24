@@ -1,6 +1,7 @@
 .dash-sidebar {
   display: flex;
   flex-direction: column;
+  padding: 20px;
 }
 
 .dash-sidebar__item {

@@ -1,0 +1,14 @@
+.link-button {
+  display: flex;
+  margin: 0 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.link-button.cancel {
+  color: #ff0000;
+}
+
+.link-button__content {
+  margin-top: 1px;
+}

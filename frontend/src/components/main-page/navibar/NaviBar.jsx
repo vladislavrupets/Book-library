@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { PermIdentity, Logout } from "@mui/icons-material";
 
 import "./naviBar.css";
+import "../../../styles.css";
 import { logout } from "../../../store/authSlice";
 
 const Header = () => {
@@ -25,8 +27,12 @@ const Header = () => {
     <nav className="navi-bar">
       <div className="navi-bar__items-container">
         <div className="navi-bar__logo">Book Library</div>
-        <div className="navi-bar__item">Library</div>
-        <div className="navi-bar__item">Top books</div>
+        <div className="link-button">
+          <span className="link-button__content">Library</span>
+        </div>
+        <div className="link-button">
+          <span className="link-button__content">Top books</span>
+        </div>
       </div>
       <div>Search books</div>
 
@@ -38,9 +44,13 @@ const Header = () => {
         </div>
       ) : (
         <div className="navi-bar__items-container">
-          <div className="navi-bar__item">Account</div>
-          <div className="navi-bar__item" onClick={handleLogout}>
-            Log out
+          <div className="link-button">
+            <PermIdentity />
+            <span className="link-button__content">My profile</span>
+          </div>
+          <div className="link-button cancel" onClick={handleLogout}>
+            <Logout />
+            <span className="link-button__content">Log out</span>
           </div>
         </div>
       )}
