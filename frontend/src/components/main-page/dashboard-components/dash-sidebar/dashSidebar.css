@@ -4,6 +4,8 @@
   padding: 20px;
 }
 
-.dash-sidebar__item {
-  margin-left: 10px;
+.dash-sidebar__items-container {
+  padding: 0;
+  margin: 0;
+  list-style: none;
 }

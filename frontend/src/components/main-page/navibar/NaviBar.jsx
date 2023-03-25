@@ -9,7 +9,6 @@ import { logout } from "../../../store/authSlice";
 const Header = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  console.log(user);
 
   const navigate = useNavigate();
 
@@ -26,11 +25,13 @@ const Header = () => {
   return (
     <nav className="navi-bar">
       <div className="navi-bar__items-container">
-        <div className="navi-bar__logo">Book Library</div>
-        <div className="link-button">
+        <div className="navi-bar__logo" onClick={() => navigate("/")}>
+          Book Library
+        </div>
+        <div className="link-button approve">
           <span className="link-button__content">Library</span>
         </div>
-        <div className="link-button">
+        <div className="link-button approve">
           <span className="link-button__content">Top books</span>
         </div>
       </div>
@@ -44,7 +45,7 @@ const Header = () => {
         </div>
       ) : (
         <div className="navi-bar__items-container">
-          <div className="link-button">
+          <div className="link-button approve">
             <PermIdentity />
             <span className="link-button__content">My profile</span>
           </div>

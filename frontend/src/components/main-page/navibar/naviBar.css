@@ -11,6 +11,8 @@
 }
 
 .navi-bar__logo {
+  font-size: large;
+  font-weight: bold;
   margin-right: 30px;
 }
 

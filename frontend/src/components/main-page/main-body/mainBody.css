@@ -3,14 +3,13 @@
   flex: 1;
   flex-direction: column;
   align-items: center;
+  padding-right: 20px;
 }
 
 .main-body__item {
-  display: flex;
   width: 100%;
 }
 
 .main-body__slider {
-  width: 1500px;
-  margin: 20px;
+  width: calc(100vw - 230px - 40px);
 }

@@ -1,5 +1,15 @@
-.image-item {
-  width: 300px !important;
-  height: 450px;
-  padding: 20px 0 20px 20px;
+.item {
+  padding: 20px 20px 20px 0px;
+}
+
+.item.small {
+  height: 300px;
+}
+
+.item.medium {
+  height: 300px;
+}
+
+.item.large {
+  height: 425px;
 }

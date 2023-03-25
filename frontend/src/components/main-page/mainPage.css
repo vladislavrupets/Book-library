@@ -13,9 +13,9 @@
   left: 0;
   display: flex;
   align-items: center;
-  padding: 0px;
   background-color: #fafafa;
   min-height: 50px;
+  z-index: 9999;
 }
 
 .inner-container {
@@ -36,6 +36,8 @@
 
 .inner-container__content {
   display: flex;
-  flex-grow: 1;
-  margin: 0 230px;
+  margin: 0 auto;
+}
+.inner-container__content.with-aside {
+  margin-left: 230px;
 }

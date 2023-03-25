@@ -7,6 +7,7 @@ import "./App.css";
 import LoginPage from "./components/auth-pages/LoginPage";
 import RegisterPage from "./components/auth-pages/RegisterPage";
 import MainPage from "./components/main-page/MainPage";
+import DashBooks from "./components/main-page/dashboard-components/dash-bodies/DashBooks";
 
 function App() {
   return (
@@ -14,7 +15,8 @@ function App() {
       <Routes>
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route index element={<MainPage />} />
+        <Route path="/test" element={<DashBooks />} />
+        <Route path="/*" element={<MainPage />} />
       </Routes>
     </BrowserRouter>
   );
