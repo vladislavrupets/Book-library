@@ -3,7 +3,6 @@ import { NavLink } from "react-router-dom";
 import { KeyboardArrowDown } from "@mui/icons-material";
 
 import "./dropdown.css";
-import "../../../styles.css";
 
 const Dropdown = ({ title, options }) => {
   const [isOpen, setIsOpen] = useState(false);

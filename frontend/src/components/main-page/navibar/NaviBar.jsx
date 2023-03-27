@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { PermIdentity, Logout } from "@mui/icons-material";
 
 import "./naviBar.css";
-import "../../../styles.css";
 import { logout } from "../../../store/authSlice";
 
 const Header = () => {

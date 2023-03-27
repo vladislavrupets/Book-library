@@ -2,12 +2,12 @@ import React from "react";
 
 import "./addBook.css";
 
-const AddBooks = () => {
+const AddBook = () => {
   return (
     <div className="content-container">
-      <h1>Books</h1>
+      <div className="content-container__item">Books</div>
     </div>
   );
 };
 
-export default AddBooks;
+export default AddBook;

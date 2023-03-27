@@ -1,9 +1,16 @@
+import { createGlobalStyle } from 'styled-components'
+
+const GlobalStyle = createGlobalStyle`
 /* content container */
 .content-container {
   display: flex;
   flex: 1;
   flex-direction: column;
   align-items: center;
+}
+
+.content-container__item{
+  margin: 6px 0;
 }
 
 /* link-button */
@@ -44,4 +51,7 @@
 
 .link.active {
   color: #007aff;
-}
+}`
+
+export default GlobalStyle
+
