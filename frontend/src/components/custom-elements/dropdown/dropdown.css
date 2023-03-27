@@ -9,6 +9,7 @@
 }
 
 .dropdown__btn {
+  padding: 3px 7px;
   display: flex;
   justify-content: space-between;
 }
@@ -18,8 +19,6 @@
 }
 
 .dropdown {
-  padding: 3px 6px 0px 6px;
-  margin: 0;
   display: flex;
   flex-direction: column;
   list-style: none;
@@ -29,7 +28,7 @@
 }
 
 .link {
-  margin: 10px 0;
+  margin: 5px 0 10px 15px;
   font-weight: 300;
 }
 

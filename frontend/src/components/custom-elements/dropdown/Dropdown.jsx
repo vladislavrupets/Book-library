@@ -15,8 +15,9 @@ const Dropdown = ({ title, options }) => {
         <KeyboardArrowDown sx={{ color: "#007aff" }} />
       </div>
       <div className={`dropdown ${isOpen ? "open" : ""}`}>
-        {options.map((option) => (
+        {options.map((option, index) => (
           <NavLink
+            key={index}
             to={option.link}
             className={({ isActive }) =>
               isActive ? "link active" : "link inactive"

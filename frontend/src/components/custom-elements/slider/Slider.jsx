@@ -52,18 +52,18 @@ const Slider = ({ items, type }) => {
       infinite
       responsive={responsive}
     >
-      {items.map((item) => {
+      {items.map((item, index) => {
         return (
-          <>
+          <div key={index}>
             <img
               src={item.image}
               alt="slide"
               draggable={false}
-              style={{ width: "100%", height: "100%" }}
+              style={{ width: "100%", height: "100%", borderRadius: "10px" }}
             />
             <h3 className="item__title">{item.title}</h3>
-            <span className="item__description">{item.descripton}</span>
-          </>
+            <span className="item__description">{item.description}</span>
+          </div>
         );
       })}
     </Carousel>

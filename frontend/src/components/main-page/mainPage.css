@@ -36,8 +36,9 @@
 
 .inner-container__content {
   display: flex;
+  flex: 1;
   margin: 0 auto;
 }
 .inner-container__content.with-aside {
-  margin-left: 230px;
+  padding: 0 20px 0 230px;
 }

@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 import "./mainBody.css";
+import "../../../styles.css";
 import Slider from "../../custom-elements/slider/Slider";
 const items = [
   {
@@ -31,19 +32,22 @@ const items = [
 
 const MainBody = () => {
   return (
-    <div className="main-body">
+    <div className="content-container">
       <div className="main-body__item">
         <div className="main-body__slider">
+          <h3>Test1</h3>
           <Slider items={items} type={"small"} />
         </div>
       </div>
       <div className="main-body__item">
         <div className="main-body__slider">
+          <h3>Test2</h3>
           <Slider items={items} type={"medium"} />
         </div>
       </div>
       <div className="main-body__item">
         <div className="main-body__slider">
+          <h3>Test3</h3>
           <Slider items={items} type={"large"} />
         </div>
       </div>

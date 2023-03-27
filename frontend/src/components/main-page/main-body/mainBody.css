@@ -1,13 +1,4 @@
-.main-body {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  align-items: center;
-  padding-right: 20px;
-}
-
 .main-body__item {
-  width: 100%;
 }
 
 .main-body__slider {

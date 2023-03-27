@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate, NavLink } from "react-router-dom";
 
 import "./dashSidebar.css";
-import Dropdown from "../../../custom-elements/dropdown/Dropdown";
+import Dropdown from "../../custom-elements/dropdown/Dropdown";
 
 const dropdownOptions = {
   booksOptions: [

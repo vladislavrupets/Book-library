@@ -3,11 +3,10 @@ import { useNavigate, BrowserRouter, Routes, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import "./mainPage.css";
+import MainRoutes from "../../routes/MainRoutes";
 import NaviBar from "./navibar/NaviBar";
 import MainBody from "./main-body/MainBody";
-import DashSidebar from "./dashboard-components/dash-sidebar/DashSidebar";
-import DashBooks from "./dashboard-components/dash-bodies/DashBooks";
-import DashUsers from "./dashboard-components/dash-bodies/DashUsers";
+import DashSidebar from "../dashboard-components/dash-sidebar/DashSidebar";
 import { fetchUser } from "../../store/authSlice";
 
 const MainPage = () => {
@@ -31,17 +30,13 @@ const MainPage = () => {
         ) : null}
 
         <main
-          className={
+          className={`inner-container__content ${
             user?.category === "administrator" && "librarian"
-              ? "inner-container__content with-aside"
-              : "inner-container__content"
-          }
+              ? "with-aside"
+              : ""
+          }`}
         >
-          <Routes>
-            <Route path="/" element={<MainBody />} />
-            <Route path="/dashboard/books" element={<DashBooks />} />
-            <Route path="/dashboard/users" element={<DashUsers />} />
-          </Routes>
+          <MainRoutes />
         </main>
       </div>
     </div>
