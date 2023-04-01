@@ -1,4 +1,4 @@
-import { createGlobalStyle } from 'styled-components'
+import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
 /* content container */
@@ -10,7 +10,7 @@ const GlobalStyle = createGlobalStyle`
 }
 
 .content-container__item{
-  margin: 6px 0;
+  margin: 20px 0;
 }
 
 /* link-button */
@@ -51,7 +51,6 @@ const GlobalStyle = createGlobalStyle`
 
 .link.active {
   color: #007aff;
-}`
+}`;
 
-export default GlobalStyle
-
+export default GlobalStyle;
