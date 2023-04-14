@@ -1,0 +1,20 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: row-reverse;
+  border-radius: 10px;
+  transition: all 0.3s ease-in-out;
+  background-color: #007aff;
+  padding: 3px 7px;
+}
+
+.close-button {
+  border: none;
+  background-color: transparent;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  color: red;
+}

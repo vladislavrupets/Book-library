@@ -10,6 +10,8 @@ const GlobalStyle = createGlobalStyle`
 }
 
 .content-container__item{
+  display: flex;
+  width: 100%;
   margin: 20px 0;
 }
 

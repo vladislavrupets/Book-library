@@ -1,1 +1,28 @@
+.add-book-cover {
+  display: flex;
+  width: 500px;
+  height: 700px;
+  background-color: #d8e8fa;
+  border-radius: 10px;
+}
 
+.add-book-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-left: 20px;
+}
+
+.add-book-container__item {
+  display: flex;
+  align-items: center;
+}
+
+.book-existence-container {
+  display: flex;
+  margin-left: auto;
+  width: 500px;
+  height: 700px;
+  background-color: #d8e8fa;
+  border-radius: 10px;
+}
