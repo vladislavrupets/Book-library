@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import "./mainPage.css";
 import MainRoutes from "../../routes/MainRoutes";
 import NaviBar from "./navibar/NaviBar";
-import MainBody from "./main-body/MainBody";
 import DashSidebar from "../dashboard-components/dash-sidebar/DashSidebar";
 import { fetchUser } from "../../store/authSlice";
 
@@ -30,11 +28,11 @@ const MainPage = () => {
         ) : null}
 
         <main
-          className={`inner-container__content ${
+          className={
             user?.category === "administrator" && "librarian"
-              ? "with-aside"
+              ? "inner-container__content-with-aside"
               : ""
-          }`}
+          }
         >
           <MainRoutes />
         </main>
