@@ -4,7 +4,6 @@
   flex-direction: column;
   min-height: 100vh;
   overflow: hidden;
-  background-color: #fafafa;
 }
 
 .main-container__header {
@@ -23,12 +22,13 @@
   flex: 1;
   overflow: hidden;
   padding-top: 50px;
-  background-color: #fafafa;
+  background-color: #ececec;
 
   justify-content: center;
 }
 
 .inner-container__aside {
+  background-color: #fafafa;
   position: fixed;
   top: 50px;
   left: 0;

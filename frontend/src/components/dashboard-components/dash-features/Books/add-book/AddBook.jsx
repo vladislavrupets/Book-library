@@ -9,7 +9,9 @@ const AddBook = () => {
   return (
     <div className="content-container">
       <div className="content-container__item">
-        <h3>Add/edit book</h3>
+        <div className="page-header">
+          <h3>Add/edit book</h3>
+        </div>
       </div>
       <div className="content-container__item">
         <div className="add-book-cover">Add book cover</div>

@@ -46,7 +46,12 @@ const Header = () => {
         <div className="navi-bar__items-container">
           <div className="link-button approve">
             <PermIdentity />
-            <span className="link-button__content">My profile</span>
+            <span
+              className="link-button__content"
+              onClick={() => navigate("/profile")}
+            >
+              My profile
+            </span>
           </div>
           <div className="link-button cancel" onClick={handleLogout}>
             <Logout />

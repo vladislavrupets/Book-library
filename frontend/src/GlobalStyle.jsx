@@ -15,6 +15,11 @@ const GlobalStyle = createGlobalStyle`
   margin: 20px 0;
 }
 
+.page-header {
+  width: 100%;
+  background-color: #fafafa;
+}
+
 /* link-button */
 .link-button {
   display: flex;
