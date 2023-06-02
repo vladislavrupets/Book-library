@@ -1,7 +1,6 @@
 .input-container {
   display: flex;
   position: relative;
-  margin: 20px 0;
 }
 
 .input-field {
@@ -9,14 +8,14 @@
   padding: 10px;
   border-radius: 10px;
   outline: none;
-  box-shadow: none;
+  border: 2px solid rgb(200, 200, 200);
   transition: 0.5s;
   font-family: "Lexend", sans-serif;
 }
 
 .input-field:valid ~ .input-label,
 .input-field:focus ~ .input-label {
-  background: #fafafa;
+  background: #ffffff;
   transform: translateX(10px) translateY(-7px);
   font-size: 12px;
   padding: 0 3px;

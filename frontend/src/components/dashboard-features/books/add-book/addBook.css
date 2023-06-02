@@ -1,14 +1,5 @@
-.add-book-cover {
-  display: flex;
-  width: 500px;
-  height: 700px;
-  background-color: #d8e8fa;
-  border-radius: 10px;
-}
-
 .add-book-container {
   display: flex;
-  flex-direction: column;
   justify-content: space-between;
   margin-left: 20px;
 }
@@ -16,6 +7,14 @@
 .add-book-container__item {
   display: flex;
   align-items: center;
+}
+
+.add-book-cover {
+  display: flex;
+  width: 500px;
+  height: 600px;
+  background-color: #d8e8fa;
+  border-radius: 10px;
 }
 
 .book-existence-container {

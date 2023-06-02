@@ -27,12 +27,12 @@ const Header = () => {
         <div className="navi-bar__logo" onClick={() => navigate("/")}>
           Book Library
         </div>
-        <div className="link-button approve">
+        <button className="link-button approve">
           <span className="link-button__content">Library</span>
-        </div>
-        <div className="link-button approve">
+        </button>
+        <button className="link-button approve">
           <span className="link-button__content">Top books</span>
-        </div>
+        </button>
       </div>
       <div>Search books</div>
 
@@ -44,19 +44,17 @@ const Header = () => {
         </div>
       ) : (
         <div className="navi-bar__items-container">
-          <div className="link-button approve">
+          <button
+            className="link-button approve"
+            onClick={() => navigate("/profile")}
+          >
             <PermIdentity />
-            <span
-              className="link-button__content"
-              onClick={() => navigate("/profile")}
-            >
-              My profile
-            </span>
-          </div>
-          <div className="link-button cancel" onClick={handleLogout}>
+            <span className="link-button__content">My profile</span>
+          </button>
+          <button className="link-button cancel" onClick={handleLogout}>
             <Logout />
             <span className="link-button__content">Log out</span>
-          </div>
+          </button>
         </div>
       )}
     </nav>

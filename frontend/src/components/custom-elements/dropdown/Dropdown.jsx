@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { KeyboardArrowDown } from "@mui/icons-material";
+import { KeyboardArrowRight } from "@mui/icons-material";
 
 import "./dropdown.css";
 
@@ -9,9 +9,14 @@ const Dropdown = ({ title, options }) => {
 
   return (
     <div className="dropdown-container">
-      <div className="dropdown__btn" onClick={() => setIsOpen(!isOpen)}>
+      <div
+        className={`dropdown__btn ${isOpen ? "open" : ""}`}
+        onClick={() => setIsOpen(!isOpen)}
+      >
         <span className="dropdown__title">{title}</span>
-        <KeyboardArrowDown sx={{ color: "#007aff" }} />
+        <div className={`dropdown__icon-wrapper ${isOpen ? "open" : ""}`}>
+          <KeyboardArrowRight sx={{ color: "#007aff" }} />
+        </div>
       </div>
       <div className={`dropdown ${isOpen ? "open" : ""}`}>
         {options.map((option, index) => (

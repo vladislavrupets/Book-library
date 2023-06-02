@@ -1,13 +1,15 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import "./mainPage.css";
+import "./container.css";
+import "../../styles.css";
 import MainRoutes from "../../routes/MainRoutes";
 import NaviBar from "./navibar/NaviBar";
-import DashSidebar from "../dashboard-components/dash-sidebar/DashSidebar";
+import DashboardSidebar from "./dashboard-sidebar/DashboardSidebar";
+import DashboardRoutes from "../../routes/DashboardRoutes";
 import { fetchUser } from "../../store/authSlice";
 
-const MainPage = () => {
+const Container = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
 
@@ -23,22 +25,23 @@ const MainPage = () => {
       <div className="inner-container">
         {user?.category === "administrator" && "librarian" ? (
           <aside className="inner-container__aside">
-            <DashSidebar />
+            <DashboardSidebar />
           </aside>
         ) : null}
 
         <main
           className={
             user?.category === "administrator" && "librarian"
-              ? "inner-container__content-with-aside"
-              : ""
+              ? "inner-container__content with-aside"
+              : "inner-container__content"
           }
         >
           <MainRoutes />
+          <DashboardRoutes />
         </main>
       </div>
     </div>
   );
 };
 
-export default MainPage;
+export default Container;

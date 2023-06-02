@@ -1,0 +1,162 @@
+/* Container */
+.content-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 0px 20px 20px 20px;
+  height: 100%;
+}
+
+.content-container__item {
+  display: flex;
+  flex: 1;
+  width: 100%;
+}
+
+.content-container__header {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.content-container__header-title {
+  margin: 0 0 20px 0;
+}
+
+/* Card */
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.card__header-title {
+  margin: 0;
+}
+
+.card__header-buttons {
+  display: flex;
+}
+
+.card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.card__body-item-container {
+  display: flex;
+  flex: 1;
+}
+
+.card__body-item {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  margin-right: 20px;
+}
+
+/* Table */
+.table {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.table__header {
+  background-color: #f2f2f2;
+}
+
+.table__body {
+  width: 100%;
+}
+
+.table__row {
+  display: table-row;
+}
+
+.table__row.odd {
+  background-color: #f2f2f2;
+}
+
+.table__row.even {
+  background-color: #ffffff;
+}
+
+.table__header-item,
+.table__row-item {
+  text-align: left;
+  padding: 10px;
+}
+
+/* Link button */
+button {
+  border: none;
+  outline: none;
+  background: none;
+  cursor: pointer;
+  font-family: "Lexend", sans-serif !important;
+}
+
+.link-button {
+  display: flex;
+  border-radius: 10px;
+  margin: 0 10px;
+  padding: 3px 7px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.link-button.approve:hover {
+  background-color: #d8e8fa;
+  border-radius: 10px;
+}
+
+.link-button.cancel {
+  color: #ff0000;
+}
+
+.link-button.cancel:hover {
+  background-color: #ffdbdb;
+  border-radius: 10px;
+}
+
+.link-button:active {
+  filter: brightness(0.98);
+  border-radius: 10px;
+  transform: scale(0.95);
+}
+
+.link-button__content {
+  margin-top: 1px;
+  font-family: inherit;
+}
+
+/* link */
+.link {
+  text-decoration: none;
+}
+
+.link.inactive {
+  color: inherit;
+}
+
+.link.active {
+  color: #007aff;
+}
+
+.link:active {
+  filter: brightness(0.98);
+  transform: scale(0.99);
+}

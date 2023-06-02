@@ -1,11 +1,15 @@
 import React from "react";
 import { useNavigate, NavLink } from "react-router-dom";
 
-import "./dashSidebar.css";
+import "./dashboardSidebar.css";
 import Dropdown from "../../custom-elements/dropdown/Dropdown";
 
 const dropdownOptions = {
   booksOptions: [
+    {
+      title: "Book list",
+      link: "/dashboard/books/book-list",
+    },
     {
       title: "Add book",
       link: "/dashboard/books/add-book",
@@ -14,7 +18,7 @@ const dropdownOptions = {
 
   usersOptions: [
     {
-      title: "Users list",
+      title: "User list",
       link: "/dashboard/users/users-list",
     },
     {
@@ -32,7 +36,7 @@ const dropdownOptions = {
   ],
 };
 
-const DashSidebar = () => {
+const DashboardSidebar = () => {
   const navigate = useNavigate();
 
   return (
@@ -43,4 +47,4 @@ const DashSidebar = () => {
   );
 };
 
-export default DashSidebar;
+export default DashboardSidebar;

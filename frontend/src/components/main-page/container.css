@@ -1,0 +1,33 @@
+.main-container {
+  position: relative;
+  min-height: 100vh;
+  background-color: #f6f8fc;
+}
+
+.main-container__header {
+  position: fixed;
+  right: 0;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  min-height: 50px;
+}
+
+.inner-container {
+  padding-top: 70px;
+}
+
+.inner-container__aside {
+  position: fixed;
+  width: 230px;
+}
+
+.inner-container__content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.inner-container__content.with-aside {
+  padding: 0px 0px 0 230px;
+}
