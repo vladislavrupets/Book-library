@@ -2,17 +2,11 @@ import React from "react";
 
 import "./input.css";
 
-const Input = ({ label }) => {
+const Input = ({ label, ...props }) => {
   return (
     <div className="input-container">
-      <input
-        className="input-field"
-        type="text"
-        required
-        autocomplete="off"
-        name="name"
-      />
-      <label className="input-label" for="name">
+      <input className="input-field" name="input" required {...props} />
+      <label className="input-label" for="input">
         {label}
       </label>
     </div>

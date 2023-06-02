@@ -54,16 +54,16 @@
   flex: 1;
 }
 
-.card__body-item-container {
+.card__body-container {
   display: flex;
+  flex-direction: column;
   flex: 1;
+  padding-bottom: 20px;
 }
 
-.card__body-item {
+.card__body-container--item {
   display: flex;
-  flex: 1;
-  flex-direction: column;
-  margin-right: 20px;
+  padding-bottom: 20px;
 }
 
 /* Table */

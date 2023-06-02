@@ -10,18 +10,28 @@
 }
 
 .add-book-cover {
-  display: flex;
-  width: 500px;
-  height: 600px;
+  width: 100px;
+  height: 150px;
   background-color: #d8e8fa;
   border-radius: 10px;
 }
 
-.book-existence-container {
-  display: flex;
-  margin-left: auto;
-  width: 500px;
-  height: 700px;
-  background-color: #d8e8fa;
+.check-book {
+  border: 2px solid black;
+  overflow: hidden;
   border-radius: 10px;
+}
+
+.check-book__search-results {
+  overflow-y: scroll;
+  max-height: 400px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.book-table-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }

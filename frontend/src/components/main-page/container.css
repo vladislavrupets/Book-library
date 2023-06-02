@@ -11,6 +11,7 @@
   display: flex;
   justify-content: space-between;
   min-height: 50px;
+  background-color: #f6f8fc;
 }
 
 .inner-container {
