@@ -18,7 +18,7 @@
   border: 2px solid rgb(200, 200, 200);
   transition: 0.5s;
   font-family: "Lexend", sans-serif;
-  min-width: 230px;
+  min-width: 300px;
 }
 
 .input-field:valid ~ .input-label,

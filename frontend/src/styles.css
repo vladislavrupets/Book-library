@@ -19,7 +19,8 @@
 }
 
 .content-container__header-title {
-  margin: 0 0 20px 0;
+  padding: 0;
+  margin: 0;
 }
 
 /* Card */
@@ -68,6 +69,9 @@
 
 .card__body-buttons {
   display: flex;
+}
+.card__body-buttons button {
+  margin-left: 5px;
 }
 
 /* Table */
@@ -169,15 +173,27 @@ button {
   font-family: inherit;
 }
 
+.main-button h4 {
+  padding: 0;
+  margin-top: 1px;
+  margin-bottom: 0;
+  font-family: inherit;
+}
+
 /* Link button */
 .link-button {
   display: flex;
   border-radius: 10px;
-  margin: 0 10px;
   padding: 3px 7px;
   font-size: 16px;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out, background-color 0.2s, transform 0.2s;
+}
+
+.link-button.visible {
   cursor: pointer;
-  transition: background-color 0.2s, transform 0.2s;
+  opacity: 1;
+  transition-delay: 0.1s;
 }
 
 .link-button.approve:hover {

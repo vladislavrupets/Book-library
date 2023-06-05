@@ -28,14 +28,14 @@ const Header = () => {
         <div className="navi-bar__logo" onClick={() => navigate("/")}>
           Book Library
         </div>
-        <button className="link-button approve">
+        <button className="link-button approve visible">
           <span>Library</span>
         </button>
-        <button className="link-button approve">
+        <button className="link-button approve visible">
           <span>Top books</span>
         </button>
       </div>
-      <Input placeholder="Search" />
+      <Input visibility={true} placeholder="Search" />
 
       {user?.category === "guest" ? (
         <div className="navi-bar__items-container">
@@ -46,13 +46,13 @@ const Header = () => {
       ) : (
         <div className="navi-bar__items-container">
           <button
-            className="link-button approve"
+            className="link-button approve visible"
             onClick={() => navigate("/profile")}
           >
             <PermIdentity />
             <span>My profile</span>
           </button>
-          <button className="link-button cancel" onClick={handleLogout}>
+          <button className="link-button cancel visible" onClick={handleLogout}>
             <Logout />
             <span>Log out</span>
           </button>

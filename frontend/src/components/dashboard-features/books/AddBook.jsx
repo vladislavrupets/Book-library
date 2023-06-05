@@ -5,10 +5,11 @@ import {
   Check,
   Clear,
   Edit,
+  DeleteOutline,
 } from "@mui/icons-material";
 
-import Input from "../../../custom-elements/input/Input";
-import "./addBook.css";
+import Input from "../../custom-elements/input/Input";
+import "./bookStyles.css";
 
 const AddBook = () => {
   const [title, setTitle] = useState("");
@@ -16,17 +17,18 @@ const AddBook = () => {
   const [authors, setAuthors] = useState([]);
   const [publisher, setPublisher] = useState("");
   const [releaseYear, setReleaseYear] = useState("");
+  const [pagesCount, setPagesCount] = useState("");
+  const [quantity, setQuantity] = useState("");
 
   const [isInputVisible, setIsInputVisible] = useState(false);
   const [inputLabel, setInputLabel] = useState("");
   const [inputContent, setInputContent] = useState({ value: "", index: null });
 
-  const [error, setError] = useState(false);
+  const [inputError, setInputError] = useState(false);
   const inputRef = useRef(null);
 
   const handleClickAddEditItem = (value, name, index) => {
     setInputContent({ value, index });
-
     setInputLabel(name);
     setIsInputVisible(true);
   };
@@ -36,14 +38,42 @@ const AddBook = () => {
     setIsInputVisible(false);
   };
 
+  const handleClickDeleteItem = () => {
+    switch (inputLabel) {
+      case "Genre":
+        setGenres((prevGenres) => {
+          const updatedGenres = [...prevGenres];
+          updatedGenres.splice(inputContent.index, 1);
+          return updatedGenres;
+        });
+        break;
+      case "Author":
+        setAuthors((prevAuthors) => {
+          const updatedAuthors = [...prevAuthors];
+          updatedAuthors.splice(inputContent.index, 1);
+          return updatedAuthors;
+        });
+        break;
+      default:
+        break;
+    }
+    setInputContent({ value: "", index: null });
+    setIsInputVisible(false);
+  };
+
   const handleChangeInput = (e) => {
     setInputContent((prevContent) => {
-      if (inputLabel === "Release year") {
-        if (typeof e.target.value !== Number && e.target.value !== "") {
-          setError(true);
-        } else {
-          setError(false);
-        }
+      if (
+        inputLabel === "Release year" ||
+        inputLabel === "Pages count" ||
+        inputLabel === "Quantity"
+      ) {
+        const isValidYear = /^\d+$/.test(e.target.value);
+        setInputError(!isValidYear);
+      }
+      if (inputLabel === "Genre") {
+        const isValidGenre = /^[a-zA-Z]+$/.test(e.target.value);
+        setInputError(!isValidGenre);
       }
       return {
         value: e.target.value,
@@ -85,6 +115,12 @@ const AddBook = () => {
       case "Release year":
         setReleaseYear(inputContent.value);
         break;
+      case "Pages count":
+        setPagesCount(inputContent.value);
+        break;
+      case "Quantity":
+        setQuantity(inputContent.value);
+        break;
       default:
         break;
     }
@@ -101,6 +137,9 @@ const AddBook = () => {
 
   return (
     <div className="content-container">
+      <div className="content-container__header">
+        <h2 className="content-container__header-title">Books</h2>
+      </div>
       <div className="content-container__item">
         <div className="card">
           <div className="card__header">
@@ -194,6 +233,40 @@ const AddBook = () => {
                               disabled={releaseYear}
                               onClick={() =>
                                 handleClickAddEditItem("", "Release year")
+                              }
+                            >
+                              <Add fontSize="small" />
+                              <span> Add</span>
+                            </button>
+                          </div>
+                        </th>
+                        <th className="table__header-item">
+                          <div className="table__header-item--content">
+                            <span>Pages count</span>
+                            <button
+                              className={`main-button ${
+                                !pagesCount && "visible"
+                              }`}
+                              disabled={pagesCount}
+                              onClick={() =>
+                                handleClickAddEditItem("", "Pages count")
+                              }
+                            >
+                              <Add fontSize="small" />
+                              <span> Add</span>
+                            </button>
+                          </div>
+                        </th>
+                        <th className="table__header-item">
+                          <div className="table__header-item--content">
+                            <span>Quantity</span>
+                            <button
+                              className={`main-button ${
+                                !quantity && "visible"
+                              }`}
+                              disabled={quantity}
+                              onClick={() =>
+                                handleClickAddEditItem("", "Quantity")
                               }
                             >
                               <Add fontSize="small" />
@@ -308,6 +381,39 @@ const AddBook = () => {
                             </div>
                           )}
                         </td>
+                        <td className="table__row-item">
+                          {pagesCount && (
+                            <div className="table__row-item--content-inner">
+                              <span>{pagesCount}</span>
+                              <button
+                                className="main-button visible"
+                                onClick={() =>
+                                  handleClickAddEditItem(
+                                    pagesCount,
+                                    "Pages count"
+                                  )
+                                }
+                              >
+                                <Edit fontSize="small" />
+                              </button>
+                            </div>
+                          )}
+                        </td>
+                        <td className="table__row-item">
+                          {quantity && (
+                            <div className="table__row-item--content-inner">
+                              <span>{quantity}</span>
+                              <button
+                                className="main-button visible"
+                                onClick={() =>
+                                  handleClickAddEditItem(quantity, "Quantity")
+                                }
+                              >
+                                <Edit fontSize="small" />
+                              </button>
+                            </div>
+                          )}
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -324,11 +430,20 @@ const AddBook = () => {
                     ref={inputRef}
                     onChange={(e) => handleChangeInput(e)}
                   />
-
+                  {isInputVisible &&
+                    ((inputLabel === "Genre" && genres.length > 1) ||
+                      (inputLabel === "Authors" && authors.length > 1)) && (
+                      <button
+                        className="link-button cancel visible"
+                        disabled={!isInputVisible}
+                        onClick={handleClickDeleteItem}
+                      >
+                        <DeleteOutline fontSize="small" />
+                      </button>
+                    )}
                   <button
                     className={`main-button ${isInputVisible && "visible"}`}
                     disabled={!isInputVisible}
-                    style={{ marginLeft: "5px" }}
                     onClick={handleClickCancelItem}
                   >
                     <Clear fontSize="small" />
@@ -336,10 +451,14 @@ const AddBook = () => {
                   </button>
                   <button
                     className={`main-button ${
-                      inputContent.value && isInputVisible && "visible"
+                      inputContent.value &&
+                      isInputVisible &&
+                      !inputError &&
+                      "visible"
                     }`}
-                    disabled={!inputContent.value || !isInputVisible || error}
-                    style={{ marginLeft: "5px" }}
+                    disabled={
+                      !inputContent.value || !isInputVisible || inputError
+                    }
                     onClick={handleClickConfirmItem}
                   >
                     <Check fontSize="small" />
@@ -348,9 +467,18 @@ const AddBook = () => {
                 </div>
 
                 <div className="card__body-buttons">
-                  <button className="main-button visible">
+                  <button
+                    className="main-button visible"
+                    disabled={
+                      !title ||
+                      genres.length < 1 ||
+                      authors.length < 1 ||
+                      !publisher ||
+                      !releaseYear
+                    }
+                  >
                     <Add />
-                    <span>Submit</span>
+                    <h4>Submit</h4>
                   </button>
                 </div>
               </div>
@@ -375,19 +503,95 @@ const AddBook = () => {
                       ></div>
                       <table className="table">
                         <thead className="table__header">
-                          <th className="table__header-item">Title</th>
-                          <th className="table__header-item">Genres</th>
-                          <th className="table__header-item">Authors</th>
-                          <th className="table__header-item">Publisher</th>
-                          <th className="table__header-item">Release year</th>
+                          <tr>
+                            <th className="table__header-item">
+                              <div className="table__header-item--content">
+                                Title
+                              </div>
+                            </th>
+                            <th className="table__header-item">
+                              <div className="table__header-item--content">
+                                Genres
+                              </div>
+                            </th>
+                            <th className="table__header-item">
+                              <div className="table__header-item--content">
+                                Authors
+                              </div>
+                            </th>
+                            <th className="table__header-item">
+                              <div className="table__header-item--content">
+                                Publisher
+                              </div>
+                            </th>
+                            <th className="table__header-item">
+                              <div className="table__header-item--content">
+                                Release year
+                              </div>
+                            </th>
+                            <th className="table__header-item">
+                              <div className="table__header-item--content">
+                                Pages count
+                              </div>
+                            </th>
+                            <th className="table__header-item">
+                              <div className="table__header-item--content">
+                                Quantity
+                              </div>
+                            </th>
+                          </tr>
                         </thead>
                         <tbody className="table__body">
                           <tr className="table__row odd">
-                            <td className="table__row-item">Harry Potter</td>
-                            <td className="table__row-item">Fantasy</td>
-                            <td className="table__row-item">J. K. Rowling</td>
-                            <td className="table__row-item">Bloomsbury</td>
-                            <td className="table__row-item">1997</td>
+                            <td className="table__row-item">
+                              <div className="table__row-item--content">
+                                <div className="table__row-item--content-inner">
+                                  Harry Potter
+                                </div>
+                              </div>
+                            </td>
+                            <td className="table__row-item">
+                              <div className="table__row-item--content">
+                                <div className="table__row-item--content-inner">
+                                  Fantasy
+                                </div>
+                              </div>
+                            </td>
+                            <td className="table__row-item">
+                              <div className="table__row-item--content">
+                                <div className="table__row-item--content-inner">
+                                  J. K. Rowling
+                                </div>
+                              </div>
+                            </td>
+                            <td className="table__row-item">
+                              <div className="table__row-item--content">
+                                <div className="table__row-item--content-inner">
+                                  Bloomsbury
+                                </div>
+                              </div>
+                            </td>
+                            <td className="table__row-item">
+                              <div className="table__row-item--content">
+                                <div className="table__row-item--content-inner">
+                                  1997
+                                </div>
+                              </div>
+                            </td>
+                            <td className="table__row-item">
+                              <div className="table__row-item--content">
+                                <div className="table__row-item--content-inner">
+                                  123
+                                </div>
+                              </div>
+                            </td>
+                            <td className="table__row-item">
+                              <div className="table__row-item--content">
+                                <div className="table__row-item--content-inner">
+                                  5
+                                </div>
+                              </div>
+                            </td>
                           </tr>
                         </tbody>
                       </table>
