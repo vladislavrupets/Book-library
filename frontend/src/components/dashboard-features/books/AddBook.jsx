@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import {
   Add,
   AddPhotoAlternate,
@@ -6,12 +7,16 @@ import {
   Clear,
   Edit,
   DeleteOutline,
+  CheckBoxOutlineBlank,
 } from "@mui/icons-material";
 
-import Input from "../../custom-elements/input/Input";
 import "./bookStyles.css";
+import { addBook } from "../../../store/bookSlice";
+import Input from "../../custom-elements/input/Input";
 
 const AddBook = () => {
+  const dispatch = useDispatch();
+
   const [title, setTitle] = useState("");
   const [genres, setGenres] = useState([]);
   const [authors, setAuthors] = useState([]);
@@ -26,6 +31,7 @@ const AddBook = () => {
 
   const [inputError, setInputError] = useState(false);
   const inputRef = useRef(null);
+  const [isChecked, setIsChecked] = useState(false);
 
   const handleClickAddEditItem = (value, name, index) => {
     setInputContent({ value, index });
@@ -59,6 +65,10 @@ const AddBook = () => {
     }
     setInputContent({ value: "", index: null });
     setIsInputVisible(false);
+  };
+
+  const handleRadioChange = () => {
+    setIsChecked(!isChecked);
   };
 
   const handleChangeInput = (e) => {
@@ -134,6 +144,31 @@ const AddBook = () => {
       inputRef.current.focus();
     }
   }, [isInputVisible]);
+
+  const handleClickSubmit = async () => {
+    try {
+      await dispatch(
+        addBook({
+          title,
+          genres,
+          authors,
+          publisher,
+          releaseYear,
+          pagesCount,
+          quantity,
+        })
+      ).unwrap();
+      setTitle("");
+      setGenres([]);
+      setAuthors([]);
+      setPublisher("");
+      setReleaseYear("");
+      setPagesCount("");
+      setQuantity("");
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className="content-container">
@@ -432,7 +467,7 @@ const AddBook = () => {
                   />
                   {isInputVisible &&
                     ((inputLabel === "Genre" && genres.length > 1) ||
-                      (inputLabel === "Authors" && authors.length > 1)) && (
+                      (inputLabel === "Author" && authors.length > 1)) && (
                       <button
                         className="link-button cancel visible"
                         disabled={!isInputVisible}
@@ -441,6 +476,7 @@ const AddBook = () => {
                         <DeleteOutline fontSize="small" />
                       </button>
                     )}
+
                   <button
                     className={`main-button ${isInputVisible && "visible"}`}
                     disabled={!isInputVisible}
@@ -464,6 +500,19 @@ const AddBook = () => {
                     <Check fontSize="small" />
                     <span>Confirm</span>
                   </button>
+                  {/* {inputLabel === "Author" && inputContent.value && (
+                    <div className="check-box-container">
+                      <label className="check-box-label">
+                        <input
+                          type="checkbox"
+                          className="check-box-input"
+                          checked={isChecked}
+                          onChange={handleRadioChange}
+                        />
+                        New
+                      </label>
+                    </div>
+                  )} */}
                 </div>
 
                 <div className="card__body-buttons">
@@ -476,6 +525,7 @@ const AddBook = () => {
                       !publisher ||
                       !releaseYear
                     }
+                    onClick={handleClickSubmit}
                   >
                     <Add />
                     <h4>Submit</h4>
@@ -483,118 +533,119 @@ const AddBook = () => {
                 </div>
               </div>
             </div>
-
-            <div className="card__body-container">
-              <div className="check-book">
-                <h4>Check book for uniqueness</h4>
-                <Input
-                  visibility={true}
-                  placeholder="Example: title=Harry Potter, releaseYear=1997"
-                />
-                <div className="check-book__search-results">
-                  <div className="card__body-container--item">
-                    <div className="dash-book-card">
-                      <div
-                        className="book-cover"
-                        style={{
-                          backgroundImage:
-                            "url(https://i.pinimg.com/originals/d0/0a/20/d00a20365c0303a5e4b450ed8b334587.jpg)",
-                        }}
-                      ></div>
-                      <table className="table">
-                        <thead className="table__header">
-                          <tr>
-                            <th className="table__header-item">
-                              <div className="table__header-item--content">
-                                Title
-                              </div>
-                            </th>
-                            <th className="table__header-item">
-                              <div className="table__header-item--content">
-                                Genres
-                              </div>
-                            </th>
-                            <th className="table__header-item">
-                              <div className="table__header-item--content">
-                                Authors
-                              </div>
-                            </th>
-                            <th className="table__header-item">
-                              <div className="table__header-item--content">
-                                Publisher
-                              </div>
-                            </th>
-                            <th className="table__header-item">
-                              <div className="table__header-item--content">
-                                Release year
-                              </div>
-                            </th>
-                            <th className="table__header-item">
-                              <div className="table__header-item--content">
-                                Pages count
-                              </div>
-                            </th>
-                            <th className="table__header-item">
-                              <div className="table__header-item--content">
-                                Quantity
-                              </div>
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody className="table__body">
-                          <tr className="table__row odd">
-                            <td className="table__row-item">
-                              <div className="table__row-item--content">
-                                <div className="table__row-item--content-inner">
-                                  Harry Potter
+            <div className="card__body-container--item">
+              <div className="card__body-container">
+                <div className="check-book">
+                  <h4>Check book for uniqueness</h4>
+                  <Input
+                    visibility={true}
+                    placeholder="Example: title=Harry Potter, releaseYear=1997"
+                  />
+                  <div className="check-book__search-results">
+                    <div className="card__body-container--item">
+                      <div className="dash-book-card">
+                        <div
+                          className="book-cover"
+                          style={{
+                            backgroundImage:
+                              "url(https://i.pinimg.com/originals/d0/0a/20/d00a20365c0303a5e4b450ed8b334587.jpg)",
+                          }}
+                        ></div>
+                        <table className="table">
+                          <thead className="table__header">
+                            <tr>
+                              <th className="table__header-item">
+                                <div className="table__header-item--content">
+                                  Title
                                 </div>
-                              </div>
-                            </td>
-                            <td className="table__row-item">
-                              <div className="table__row-item--content">
-                                <div className="table__row-item--content-inner">
-                                  Fantasy
+                              </th>
+                              <th className="table__header-item">
+                                <div className="table__header-item--content">
+                                  Genres
                                 </div>
-                              </div>
-                            </td>
-                            <td className="table__row-item">
-                              <div className="table__row-item--content">
-                                <div className="table__row-item--content-inner">
-                                  J. K. Rowling
+                              </th>
+                              <th className="table__header-item">
+                                <div className="table__header-item--content">
+                                  Authors
                                 </div>
-                              </div>
-                            </td>
-                            <td className="table__row-item">
-                              <div className="table__row-item--content">
-                                <div className="table__row-item--content-inner">
-                                  Bloomsbury
+                              </th>
+                              <th className="table__header-item">
+                                <div className="table__header-item--content">
+                                  Publisher
                                 </div>
-                              </div>
-                            </td>
-                            <td className="table__row-item">
-                              <div className="table__row-item--content">
-                                <div className="table__row-item--content-inner">
-                                  1997
+                              </th>
+                              <th className="table__header-item">
+                                <div className="table__header-item--content">
+                                  Release year
                                 </div>
-                              </div>
-                            </td>
-                            <td className="table__row-item">
-                              <div className="table__row-item--content">
-                                <div className="table__row-item--content-inner">
-                                  123
+                              </th>
+                              <th className="table__header-item">
+                                <div className="table__header-item--content">
+                                  Pages count
                                 </div>
-                              </div>
-                            </td>
-                            <td className="table__row-item">
-                              <div className="table__row-item--content">
-                                <div className="table__row-item--content-inner">
-                                  5
+                              </th>
+                              <th className="table__header-item">
+                                <div className="table__header-item--content">
+                                  Quantity
                                 </div>
-                              </div>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody className="table__body">
+                            <tr className="table__row odd">
+                              <td className="table__row-item">
+                                <div className="table__row-item--content">
+                                  <div className="table__row-item--content-inner">
+                                    Harry Potter
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="table__row-item">
+                                <div className="table__row-item--content">
+                                  <div className="table__row-item--content-inner">
+                                    Fantasy
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="table__row-item">
+                                <div className="table__row-item--content">
+                                  <div className="table__row-item--content-inner">
+                                    J. K. Rowling
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="table__row-item">
+                                <div className="table__row-item--content">
+                                  <div className="table__row-item--content-inner">
+                                    Bloomsbury
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="table__row-item">
+                                <div className="table__row-item--content">
+                                  <div className="table__row-item--content-inner">
+                                    1997
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="table__row-item">
+                                <div className="table__row-item--content">
+                                  <div className="table__row-item--content-inner">
+                                    123
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="table__row-item">
+                                <div className="table__row-item--content">
+                                  <div className="table__row-item--content-inner">
+                                    5
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   </div>
                 </div>

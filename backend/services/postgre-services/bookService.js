@@ -73,6 +73,7 @@ class BookServise {
             returning author_id`,
           [newAuthorsNames]
         );
+        console.log(authorsData);
         newAuthorsIds = authorsData.rows.map(
           (authorData) => authorData.author_id
         );
