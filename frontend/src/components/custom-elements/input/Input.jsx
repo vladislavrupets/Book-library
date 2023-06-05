@@ -1,16 +1,14 @@
-import React from "react";
+import React, { forwardRef } from "react";
 
 import "./input.css";
 
-const Input = ({ label, ...props }) => {
+const Input = forwardRef(({ label, visibility, ...props }, ref) => {
   return (
-    <div className="input-container">
-      <input className="input-field" name="input" required {...props} />
-      <label className="input-label" for="input">
-        {label}
-      </label>
+    <div className={`input-container ${visibility && "visible"}`}>
+      <input className="input-field" required {...props} ref={ref} />
+      <label className="input-label">{label}</label>
     </div>
   );
-};
+});
 
 export default Input;

@@ -11,9 +11,9 @@ const BookList = () => {
           <div className="card__header">
             <h3 className="card__header-title">Book list</h3>
             <div className="card__header-buttons">
-              <button className="link-button approve">
+              <button className="main-button">
                 <Add />
-                <span className="link-button__content">Add book</span>
+                <span className="main-button__content">Add book</span>
               </button>
             </div>
           </div>

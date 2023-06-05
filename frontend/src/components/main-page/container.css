@@ -12,15 +12,30 @@
   justify-content: space-between;
   min-height: 50px;
   background-color: #f6f8fc;
+  z-index: 9999;
 }
 
 .inner-container {
-  padding-top: 70px;
+  position: relative;
+  top: 50px;
+  padding-top: 30px;
+  height: calc(100vh - 50px - 30px);
 }
 
 .inner-container__aside {
   position: fixed;
   width: 230px;
+  height: 100%;
+}
+
+@media screen and (max-width: 767px) {
+  .inner-container__aside {
+    transform: translateX(-100%);
+  }
+
+  .inner-container__content {
+    padding-left: 0;
+  }
 }
 
 .inner-container__content {
@@ -30,5 +45,5 @@
 }
 
 .inner-container__content.with-aside {
-  padding: 0px 0px 0 230px;
+  padding-left: 230px;
 }

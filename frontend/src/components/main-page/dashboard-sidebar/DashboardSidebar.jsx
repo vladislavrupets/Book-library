@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate, NavLink } from "react-router-dom";
 
 import "./dashboardSidebar.css";
-import Dropdown from "../../custom-elements/dropdown/Dropdown";
+import DropdownSelect from "../../custom-elements/dropdown-select/DropdownSelect";
 
 const dropdownOptions = {
   booksOptions: [
@@ -41,8 +41,8 @@ const DashboardSidebar = () => {
 
   return (
     <div className="dash-sidebar">
-      <Dropdown title={"Books"} options={dropdownOptions.booksOptions} />
-      <Dropdown title={"Users"} options={dropdownOptions.usersOptions} />
+      <DropdownSelect title={"Books"} options={dropdownOptions.booksOptions} />
+      <DropdownSelect title={"Users"} options={dropdownOptions.usersOptions} />
     </div>
   );
 };

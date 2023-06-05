@@ -58,12 +58,16 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding-bottom: 20px;
 }
 
 .card__body-container--item {
   display: flex;
   padding-bottom: 20px;
+  justify-content: space-between;
+}
+
+.card__body-buttons {
+  display: flex;
 }
 
 /* Table */
@@ -74,7 +78,8 @@
 }
 
 .table__header {
-  background-color: #f2f2f2;
+  background-color: #bad3f0;
+  border-radius: 10px;
 }
 
 .table__body {
@@ -85,29 +90,86 @@
   display: table-row;
 }
 
-.table__row.odd {
-  background-color: #f2f2f2;
-}
-
-.table__row.even {
-  background-color: #ffffff;
-}
-
-.table__header-item,
 .table__row-item {
+  background-color: #edf5fb;
+  padding: 0px 10px;
+}
+
+.table__header-item:last-child {
+  border-top-right-radius: 10px;
+}
+
+.table__row-item:last-child {
+  border-bottom-right-radius: 10px;
+}
+
+.table__header-item {
+  font-weight: bold;
   text-align: left;
   padding: 10px;
 }
 
-/* Link button */
+.table__row-item--content {
+  flex: 1;
+  overflow: auto;
+  max-height: 100px;
+}
+
+.table__row-item--content-inner,
+.table__header-item--content {
+  display: flex;
+  padding: 3.5px 0px;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.table__row-item--content-inner span {
+  margin-top: 1px;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.table__row-item--content-inner button {
+  align-self: flex-end;
+}
+
+/* Main button */
 button {
   border: none;
   outline: none;
   background: none;
-  cursor: pointer;
   font-family: "Lexend", sans-serif !important;
 }
 
+.main-button {
+  display: flex;
+  border-radius: 10px;
+  padding: 3px 7px;
+  font-size: 16px;
+  transition: background-color 0.2s, transform 0.2s;
+  background-color: #c2e7ff;
+  opacity: 0;
+  transition: opacity 0.1s ease-in-out;
+}
+
+.main-button.visible {
+  cursor: pointer;
+  opacity: 1;
+  transition-delay: 0.1s;
+}
+
+.main-button:active {
+  filter: brightness(0.98);
+  border-radius: 10px;
+  transform: scale(0.95);
+}
+
+.main-button span {
+  margin-top: 1px;
+  font-family: inherit;
+}
+
+/* Link button */
 .link-button {
   display: flex;
   border-radius: 10px;
@@ -119,8 +181,8 @@ button {
 }
 
 .link-button.approve:hover {
-  background-color: #d8e8fa;
   border-radius: 10px;
+  background-color: #c2e7ff;
 }
 
 .link-button.cancel {
@@ -138,7 +200,7 @@ button {
   transform: scale(0.95);
 }
 
-.link-button__content {
+.link-button span {
   margin-top: 1px;
   font-family: inherit;
 }

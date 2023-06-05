@@ -4,6 +4,7 @@ import { PermIdentity, Logout } from "@mui/icons-material";
 
 import "./naviBar.css";
 import { logout } from "../../../store/authSlice";
+import Input from "../../custom-elements/input/Input";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -28,13 +29,13 @@ const Header = () => {
           Book Library
         </div>
         <button className="link-button approve">
-          <span className="link-button__content">Library</span>
+          <span>Library</span>
         </button>
         <button className="link-button approve">
-          <span className="link-button__content">Top books</span>
+          <span>Top books</span>
         </button>
       </div>
-      <div>Search books</div>
+      <Input placeholder="Search" />
 
       {user?.category === "guest" ? (
         <div className="navi-bar__items-container">
@@ -49,11 +50,11 @@ const Header = () => {
             onClick={() => navigate("/profile")}
           >
             <PermIdentity />
-            <span className="link-button__content">My profile</span>
+            <span>My profile</span>
           </button>
           <button className="link-button cancel" onClick={handleLogout}>
             <Logout />
-            <span className="link-button__content">Log out</span>
+            <span>Log out</span>
           </button>
         </div>
       )}

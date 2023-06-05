@@ -1,16 +1,24 @@
 .input-container {
-  display: flex;
   position: relative;
+  display: flex;
+  opacity: 0;
+  transition: opacity 0.1s ease-in-out;
+}
+
+.input-container.visible {
+  opacity: 1;
+  transition-delay: 0.1s;
 }
 
 .input-field {
   width: 100%;
-  padding: 10px;
+  padding: 5px;
   border-radius: 10px;
   outline: none;
   border: 2px solid rgb(200, 200, 200);
   transition: 0.5s;
   font-family: "Lexend", sans-serif;
+  min-width: 230px;
 }
 
 .input-field:valid ~ .input-label,
@@ -20,18 +28,18 @@
   font-size: 12px;
   padding: 0 3px;
   letter-spacing: 2px;
-  color: #007aff;
+  color: #86c1ff;
 }
 
 .input-field:focus {
-  border-color: #007aff;
+  border-color: #86c1ff;
 }
 
 .input-label {
   position: absolute;
   top: 0;
   left: 0;
-  padding: 10px;
+  padding: 5px 10px;
   pointer-events: none;
   font-size: 16px;
   color: #aaa;
