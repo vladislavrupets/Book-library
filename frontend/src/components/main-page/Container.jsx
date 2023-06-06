@@ -11,37 +11,47 @@ import { fetchUser } from "../../store/authSlice";
 
 const Container = () => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
+  const { user, status } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(fetchUser());
   }, []);
 
-  return (
-    <div className="main-container">
-      <header className="main-container__header">
-        <NaviBar />
-      </header>
-      <div className="inner-container">
-        {user?.category === "administrator" && "librarian" ? (
-          <aside className="inner-container__aside">
-            <DashboardSidebar />
-          </aside>
-        ) : null}
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
 
-        <main
-          className={
-            user?.category === "administrator" && "librarian"
-              ? "inner-container__content with-aside"
-              : "inner-container__content"
-          }
-        >
-          <MainRoutes />
-          <DashboardRoutes />
-        </main>
+  if (status === "rejected") {
+    return <div>Error: {error}</div>;
+  }
+
+  if (status === "resolved") {
+    return (
+      <div className="main-container">
+        <header className="main-container__header">
+          <NaviBar />
+        </header>
+        <div className="inner-container">
+          {user.category === "administrator" && "librarian" ? (
+            <aside className="inner-container__aside">
+              <DashboardSidebar />
+            </aside>
+          ) : null}
+
+          <main
+            className={
+              user.category === "administrator" && "librarian"
+                ? "inner-container__content with-aside"
+                : "inner-container__content"
+            }
+          >
+            <MainRoutes />
+            <DashboardRoutes />
+          </main>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 };
 
 export default Container;

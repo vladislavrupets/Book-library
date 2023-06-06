@@ -1,6 +1,54 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Axios from "../utilities/axiosConfig";
 
+export const fetchAuthors = createAsyncThunk(
+  "books/fetchAuthors",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await Axios.get("/authors");
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const fetchGenres = createAsyncThunk(
+  "books/fetchGenres",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await Axios.get("/genres");
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const fetchPublishers = createAsyncThunk(
+  "books/fetchPublishers",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await Axios.get("/publishers");
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const fetchWritings = createAsyncThunk(
+  "books/fetchWritings",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await Axios.get("/publishers");
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 export const fetchBooks = createAsyncThunk(
   "books/fetchBooks",
   async (_, { rejectWithValue }) => {
@@ -40,7 +88,18 @@ export const editBook = createAsyncThunk(
 const booksSlice = createSlice({
   name: "books",
   initialState: {
-    books: [],
+    books: [
+      {
+        book_id: null,
+        writing: null,
+        genres: [],
+        authors: [],
+        publisher: "",
+        releaseYear: 0,
+        pagesCount: 0,
+        quantity: 0,
+      },
+    ],
     status: null,
     error: null,
   },

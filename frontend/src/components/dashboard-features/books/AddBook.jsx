@@ -7,7 +7,6 @@ import {
   Clear,
   Edit,
   DeleteOutline,
-  CheckBoxOutlineBlank,
 } from "@mui/icons-material";
 
 import "./bookStyles.css";
@@ -78,8 +77,8 @@ const AddBook = () => {
         inputLabel === "Pages count" ||
         inputLabel === "Quantity"
       ) {
-        const isValidYear = /^\d+$/.test(e.target.value);
-        setInputError(!isValidYear);
+        const isValidInput = /^\d+$/.test(e.target.value);
+        setInputError(!isValidInput);
       }
       if (inputLabel === "Genre") {
         const isValidGenre = /^[a-zA-Z]+$/.test(e.target.value);
@@ -149,7 +148,7 @@ const AddBook = () => {
     try {
       await dispatch(
         addBook({
-          title,
+          writing: title,
           genres,
           authors,
           publisher,
@@ -184,12 +183,14 @@ const AddBook = () => {
             <div className="card__body-container">
               <div className="card__body-container--item">
                 <div className="dash-book-card">
-                  <button className="add-book-cover">
-                    <AddPhotoAlternate />
-                  </button>
                   <table className="table">
                     <thead className="table__header">
                       <tr>
+                        <th className="table__header-item">
+                          <div className="table__header-item--content">
+                            <span>Cover</span>
+                          </div>
+                        </th>
                         <th className="table__header-item">
                           <div className="table__header-item--content">
                             <span>Title</span>
@@ -313,6 +314,12 @@ const AddBook = () => {
                     </thead>
                     <tbody className="table__body">
                       <tr className="table__row">
+                        <td className="table__row-item">
+                          <button className="add-book-cover">
+                            <AddPhotoAlternate />
+                          </button>
+                        </td>
+
                         <td className="table__row-item">
                           <div className="table__row-item--content">
                             {title && (
@@ -487,10 +494,7 @@ const AddBook = () => {
                   </button>
                   <button
                     className={`main-button ${
-                      inputContent.value &&
-                      isInputVisible &&
-                      !inputError &&
-                      "visible"
+                      inputContent.value && isInputVisible && "visible"
                     }`}
                     disabled={
                       !inputContent.value || !isInputVisible || inputError
@@ -498,7 +502,7 @@ const AddBook = () => {
                     onClick={handleClickConfirmItem}
                   >
                     <Check fontSize="small" />
-                    <span>Confirm</span>
+                    <span>Add new</span>
                   </button>
                   {/* {inputLabel === "Author" && inputContent.value && (
                     <div className="check-box-container">
@@ -523,7 +527,9 @@ const AddBook = () => {
                       genres.length < 1 ||
                       authors.length < 1 ||
                       !publisher ||
-                      !releaseYear
+                      !releaseYear ||
+                      !pagesCount ||
+                      !quantity
                     }
                     onClick={handleClickSubmit}
                   >
@@ -544,16 +550,14 @@ const AddBook = () => {
                   <div className="check-book__search-results">
                     <div className="card__body-container--item">
                       <div className="dash-book-card">
-                        <div
-                          className="book-cover"
-                          style={{
-                            backgroundImage:
-                              "url(https://i.pinimg.com/originals/d0/0a/20/d00a20365c0303a5e4b450ed8b334587.jpg)",
-                          }}
-                        ></div>
                         <table className="table">
                           <thead className="table__header">
                             <tr>
+                              <th className="table__header-item">
+                                <div className="table__header-item--content">
+                                  Cover
+                                </div>
+                              </th>
                               <th className="table__header-item">
                                 <div className="table__header-item--content">
                                   Title
@@ -593,6 +597,15 @@ const AddBook = () => {
                           </thead>
                           <tbody className="table__body">
                             <tr className="table__row odd">
+                              <td className="table__row-item">
+                                <div
+                                  className="book-cover"
+                                  style={{
+                                    backgroundImage:
+                                      "url(https://i.pinimg.com/originals/d0/0a/20/d00a20365c0303a5e4b450ed8b334587.jpg)",
+                                  }}
+                                ></div>
+                              </td>
                               <td className="table__row-item">
                                 <div className="table__row-item--content">
                                   <div className="table__row-item--content-inner">

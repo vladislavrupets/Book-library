@@ -2,19 +2,19 @@
   display: flex;
   background-color: #bad3f0;
   border-radius: 10px;
-  height: 175px;
 }
 
 .add-book-cover,
 .book-cover {
   display: flex;
+  width: 100%;
   align-items: center;
   justify-content: center;
-  width: 125px;
+  height: 150px;
   background-color: #c2e7ff;
   border-bottom-left-radius: 10px;
-  border-top-left-radius: 10px;
   background-size: cover;
+  padding: 0;
   background-position: center;
 }
 

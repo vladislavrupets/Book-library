@@ -11,5 +11,5 @@ module.exports = session({
   secret: process.env.COOKIE_SECRET,
   saveUninitialized: false,
   resave: false,
-  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 },
+  cookie: { maxAge: 24 * 60 * 60 * 1000 },
 });
