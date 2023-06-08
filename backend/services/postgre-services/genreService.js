@@ -11,6 +11,33 @@ class GenreService {
     }
   }
 
+  async getGenresIdByName(genres, category) {
+    try {
+      const genreData = await pgPool(category).query(
+        `select genre_id from Genre where genre_name = any($1::varchar[])`,
+        [genres]
+      );
+
+      return genreData.rows;
+    } catch (err) {
+      console.error(err);
+      throw { code: 404 };
+    }
+  }
+
+  async searchGenres(searchTerm, category) {
+    try {
+      const genresData = await pgPool(category).query(
+        `select * from Genre where genre_name ilike $1`,
+        [`%${searchTerm}%`]
+      );
+      return genresData.rows;
+    } catch (err) {
+      console.error(err);
+      throw { code: 404 };
+    }
+  }
+
   async createGenre(genres, category) {
     try {
       const genreData = await pgPool(category).query(

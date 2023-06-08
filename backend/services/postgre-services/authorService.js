@@ -11,12 +11,37 @@ class AuthorService {
     }
   }
 
+  async searchAuthors(searchTerm, category) {
+    try {
+      const authorsData = await pgPool(category).query(
+        `select * from Author where full_name ilike $1`,
+        [`%${searchTerm}%`]
+      );
+      return authorsData.rows;
+    } catch (err) {
+      console.error(err);
+      throw { code: 404 };
+    }
+  }
+
+  async getAuthorsById(authors_ids, category) {
+    try {
+      const authorData = await pgPool(category).query(
+        "select * from Author where author_id = any($1::uuid[])",
+        [authors_ids]
+      );
+      return authorData.rows;
+    } catch (err) {
+      console.error(err);
+      throw { code: 404 };
+    }
+  }
+
   async createAuthor(authors, category) {
     try {
       const authorData = await pgPool(category).query(
         `insert into Author(full_name) 
         select unnest($1::varchar[])
-        on conflict(full_name) do nothing
         returning *`,
         [authors]
       );

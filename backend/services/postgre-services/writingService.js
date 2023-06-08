@@ -26,6 +26,19 @@ class WritingService {
     }
   }
 
+  async searchWritings(searchTerm, category) {
+    try {
+      const writingsData = await pgPool(category).query(
+        `select * from Writing where title ilike $1`,
+        [`%${searchTerm}%`]
+      );
+      return writingsData.rows;
+    } catch (err) {
+      console.error(err);
+      throw { code: 404 };
+    }
+  }
+
   async createWriting(title, category) {
     try {
       const writingData = await pgPool(category).query(
@@ -34,7 +47,6 @@ class WritingService {
         returning *`,
         [title]
       );
-
       return writingData.rows[0];
     } catch (err) {
       console.error(err);

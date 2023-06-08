@@ -11,7 +11,7 @@ import { fetchUser } from "../../store/authSlice";
 
 const Container = () => {
   const dispatch = useDispatch();
-  const { user, status } = useSelector((state) => state.auth);
+  const { user, status, error } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(fetchUser());

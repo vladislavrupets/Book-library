@@ -33,6 +33,8 @@ class AuthController {
       req.session.user = {
         user_id: userInfo.user_id,
         full_name: userInfo.full_name,
+        phone_number: userInfo.phone_number,
+        trust_rating: userInfo.trust_rating,
         category: userInfo.category,
       };
       res.status(200).send();

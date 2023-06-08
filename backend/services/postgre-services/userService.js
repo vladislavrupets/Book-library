@@ -11,6 +11,20 @@ class UserService {
     }
   }
 
+  async getUserById(user_id, category) {
+    try {
+      const userData = await pgPool(category).query(
+        "select * from Users where user_id = $1",
+
+        [user_id]
+      );
+      return userData.rows[0];
+    } catch (err) {
+      console.error(err);
+      throw { code: 500 };
+    }
+  }
+
   async getUserByData(user, category) {
     try {
       const userData = await pgPool(category).query(

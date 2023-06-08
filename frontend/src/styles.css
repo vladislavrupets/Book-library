@@ -70,6 +70,7 @@
 .card__body-buttons {
   display: flex;
 }
+
 .card__body-buttons button {
   margin-left: 5px;
 }
@@ -115,10 +116,15 @@
 .table__row:last-child .table__row-item:last-child {
   border-bottom-right-radius: 10px;
 }
+
 .table__header-item {
   font-weight: bold;
   text-align: left;
   padding: 10px;
+}
+
+.book-cover__span {
+  padding-bottom: 7px;
 }
 
 .table__row-item--content {

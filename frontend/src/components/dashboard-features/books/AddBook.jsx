@@ -1,22 +1,28 @@
-import { useState, useRef, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Add,
   AddPhotoAlternate,
   Check,
-  Clear,
+  SearchOutlined,
+  QuestionMark,
   Edit,
   DeleteOutline,
 } from "@mui/icons-material";
 
 import "./bookStyles.css";
-import { addBook } from "../../../store/bookSlice";
+import { addBook, searchBooks } from "../../../store/bookSlice";
 import Input from "../../custom-elements/input/Input";
 
 const AddBook = () => {
   const dispatch = useDispatch();
+  const { books, status, error } = useSelector((state) => state.book);
 
-  const [title, setTitle] = useState("");
+  const [cover, setCover] = useState("");
+  const [writing, setWriting] = useState({
+    title: "",
+    writing_id: "",
+  });
   const [genres, setGenres] = useState([]);
   const [authors, setAuthors] = useState([]);
   const [publisher, setPublisher] = useState("");
@@ -30,29 +36,60 @@ const AddBook = () => {
 
   const [inputError, setInputError] = useState(false);
   const inputRef = useRef(null);
-  const [isChecked, setIsChecked] = useState(false);
 
-  const handleClickAddEditItem = (value, name, index) => {
+  const [inputSearchContent, setInputSearchContent] = useState("");
+  const [isManulSerching, setIsManulSerching] = useState(true);
+  const [isCheckedField, setIsCheckedField] = useState(false);
+
+  const handleClickAddNewEditItem = (value, name, index) => {
     setInputContent({ value, index });
     setInputLabel(name);
     setIsInputVisible(true);
+    setIsCheckedField(false);
   };
 
-  const handleClickCancelItem = () => {
+  const handleClickAddExistItem = (value, name, id) => {
+    if (name === "Title") {
+      setWriting({ title: value, writing_id: id });
+    }
+    if (name === "Authors") {
+      setAuthors((prevAuthors) => {
+        const updatedAuthors = [...prevAuthors];
+        updatedAuthors.push({ full_name: value, author_id: id });
+        return updatedAuthors;
+      });
+    }
     setInputContent({ value: "", index: null });
     setIsInputVisible(false);
   };
 
+  const handleClickSearch = () => {
+    dispatch(searchBooks(inputSearchContent));
+  };
+
+  const handleClickCheckItem = () => {
+    setInputSearchContent(`${inputLabel.toLowerCase()}=${inputContent.value};`);
+    setIsCheckedField(true);
+    setIsManulSerching(false);
+  };
+
+  useEffect(() => {
+    if (!isManulSerching && inputContent) {
+      handleClickSearch();
+      setIsManulSerching(true);
+    }
+  }, [inputSearchContent]);
+
   const handleClickDeleteItem = () => {
     switch (inputLabel) {
-      case "Genre":
+      case "Genres":
         setGenres((prevGenres) => {
           const updatedGenres = [...prevGenres];
           updatedGenres.splice(inputContent.index, 1);
           return updatedGenres;
         });
         break;
-      case "Author":
+      case "Authors":
         setAuthors((prevAuthors) => {
           const updatedAuthors = [...prevAuthors];
           updatedAuthors.splice(inputContent.index, 1);
@@ -66,23 +103,30 @@ const AddBook = () => {
     setIsInputVisible(false);
   };
 
-  const handleRadioChange = () => {
-    setIsChecked(!isChecked);
-  };
-
   const handleChangeInput = (e) => {
+    setIsCheckedField(false);
     setInputContent((prevContent) => {
       if (
         inputLabel === "Release year" ||
         inputLabel === "Pages count" ||
         inputLabel === "Quantity"
       ) {
+        setIsCheckedField(true);
         const isValidInput = /^\d+$/.test(e.target.value);
         setInputError(!isValidInput);
       }
-      if (inputLabel === "Genre") {
-        const isValidGenre = /^[a-zA-Z]+$/.test(e.target.value);
+      if (inputLabel === "Genres") {
+        setIsCheckedField(true);
+        const isValidGenre = /^[a-zA-Zа-яА-Я\s]+$/.test(e.target.value);
         setInputError(!isValidGenre);
+      }
+      if (inputLabel === "Publisher") {
+        setIsCheckedField(true);
+      }
+      if (inputLabel === "Cover") {
+        setIsCheckedField(true);
+        const isValidUrl = /^(ftp|http|https):\/\/[^ "]+$/.test(e.target.value);
+        setInputError(!isValidUrl);
       }
       return {
         value: e.target.value,
@@ -93,10 +137,13 @@ const AddBook = () => {
 
   const handleClickConfirmItem = () => {
     switch (inputLabel) {
-      case "Title":
-        setTitle(inputContent.value);
+      case "Cover":
+        setCover(inputContent.value);
         break;
-      case "Genre":
+      case "Title":
+        setWriting({ title: inputContent.value });
+        break;
+      case "Genres":
         setGenres((prevGenres) => {
           const updatedGenres = [...prevGenres];
           if (inputContent.index !== undefined) {
@@ -107,13 +154,15 @@ const AddBook = () => {
           return updatedGenres;
         });
         break;
-      case "Author":
+      case "Authors":
         setAuthors((prevAuthors) => {
           const updatedAuthors = [...prevAuthors];
           if (inputContent.index !== undefined) {
-            updatedAuthors[inputContent.index] = inputContent.value;
+            updatedAuthors[inputContent.index] = {
+              full_name: inputContent.value,
+            };
           } else {
-            updatedAuthors.push(inputContent.value);
+            updatedAuthors.push({ full_name: inputContent.value });
           }
           return updatedAuthors;
         });
@@ -148,16 +197,17 @@ const AddBook = () => {
     try {
       await dispatch(
         addBook({
-          writing: title,
+          writing,
           genres,
           authors,
           publisher,
           releaseYear,
           pagesCount,
           quantity,
+          coverUrl: cover,
         })
       ).unwrap();
-      setTitle("");
+      setWriting("");
       setGenres([]);
       setAuthors([]);
       setPublisher("");
@@ -188,21 +238,23 @@ const AddBook = () => {
                       <tr>
                         <th className="table__header-item">
                           <div className="table__header-item--content">
-                            <span>Cover</span>
+                            <span className="book-cover__span">Cover</span>
                           </div>
                         </th>
                         <th className="table__header-item">
                           <div className="table__header-item--content">
                             <span>Title</span>
                             <button
-                              className={`main-button ${!title && "visible"}`}
-                              disabled={title}
+                              className={`main-button ${
+                                !writing.title && "visible"
+                              }`}
+                              disabled={writing.title}
                               onClick={() =>
-                                handleClickAddEditItem(title, "Title")
+                                handleClickAddNewEditItem("", "Title")
                               }
                             >
                               <Add fontSize="small" />
-                              <span> Add</span>
+                              <span>Add</span>
                             </button>
                           </div>
                         </th>
@@ -212,15 +264,15 @@ const AddBook = () => {
                             <button
                               className="main-button visible"
                               onClick={() =>
-                                handleClickAddEditItem(
+                                handleClickAddNewEditItem(
                                   "",
-                                  "Genre",
+                                  "Genres",
                                   genres.length
                                 )
                               }
                             >
                               <Add fontSize="small" />
-                              <span> Add</span>
+                              <span>Add</span>
                             </button>
                           </div>
                         </th>
@@ -230,15 +282,15 @@ const AddBook = () => {
                             <button
                               className="main-button visible"
                               onClick={() =>
-                                handleClickAddEditItem(
+                                handleClickAddNewEditItem(
                                   "",
-                                  "Author",
+                                  "Authors",
                                   authors.length
                                 )
                               }
                             >
                               <Add fontSize="small" />
-                              <span> Add</span>
+                              <span>Add</span>
                             </button>
                           </div>
                         </th>
@@ -251,11 +303,11 @@ const AddBook = () => {
                               }`}
                               disabled={publisher}
                               onClick={() =>
-                                handleClickAddEditItem("", "Publisher")
+                                handleClickAddNewEditItem("", "Publisher")
                               }
                             >
                               <Add fontSize="small" />
-                              <span> Add</span>
+                              <span>Add</span>
                             </button>
                           </div>
                         </th>
@@ -268,11 +320,11 @@ const AddBook = () => {
                               }`}
                               disabled={releaseYear}
                               onClick={() =>
-                                handleClickAddEditItem("", "Release year")
+                                handleClickAddNewEditItem("", "Release year")
                               }
                             >
                               <Add fontSize="small" />
-                              <span> Add</span>
+                              <span>Add</span>
                             </button>
                           </div>
                         </th>
@@ -285,11 +337,11 @@ const AddBook = () => {
                               }`}
                               disabled={pagesCount}
                               onClick={() =>
-                                handleClickAddEditItem("", "Pages count")
+                                handleClickAddNewEditItem("", "Pages count")
                               }
                             >
                               <Add fontSize="small" />
-                              <span> Add</span>
+                              <span>Add</span>
                             </button>
                           </div>
                         </th>
@@ -302,11 +354,11 @@ const AddBook = () => {
                               }`}
                               disabled={quantity}
                               onClick={() =>
-                                handleClickAddEditItem("", "Quantity")
+                                handleClickAddNewEditItem("", "Quantity")
                               }
                             >
                               <Add fontSize="small" />
-                              <span> Add</span>
+                              <span>Add</span>
                             </button>
                           </div>
                         </th>
@@ -315,20 +367,31 @@ const AddBook = () => {
                     <tbody className="table__body">
                       <tr className="table__row">
                         <td className="table__row-item">
-                          <button className="add-book-cover">
+                          <button
+                            className="add-book-cover"
+                            style={{
+                              backgroundImage: `url(${cover})`,
+                            }}
+                            onClick={() =>
+                              handleClickAddNewEditItem("", "Cover")
+                            }
+                          >
                             <AddPhotoAlternate />
                           </button>
                         </td>
 
                         <td className="table__row-item">
                           <div className="table__row-item--content">
-                            {title && (
+                            {writing.title && (
                               <div className="table__row-item--content-inner">
-                                <span>{title}</span>
+                                <span>{writing.title}</span>
                                 <button
                                   className="main-button visible"
                                   onClick={() =>
-                                    handleClickAddEditItem(title, "Title")
+                                    handleClickAddNewEditItem(
+                                      writing.title,
+                                      "Title"
+                                    )
                                   }
                                 >
                                   <Edit fontSize="small" />
@@ -348,9 +411,9 @@ const AddBook = () => {
                                 <button
                                   className="main-button visible"
                                   onClick={() =>
-                                    handleClickAddEditItem(
+                                    handleClickAddNewEditItem(
                                       genre,
-                                      "Genre",
+                                      "Genres",
                                       index
                                     )
                                   }
@@ -368,13 +431,13 @@ const AddBook = () => {
                                 key={index}
                                 className="table__row-item--content-inner"
                               >
-                                <span>{author}</span>
+                                <span>{author.full_name}</span>
                                 <button
                                   className="main-button visible"
                                   onClick={() =>
-                                    handleClickAddEditItem(
-                                      author,
-                                      "Author",
+                                    handleClickAddNewEditItem(
+                                      author.full_name,
+                                      "Authors",
                                       index
                                     )
                                   }
@@ -393,7 +456,7 @@ const AddBook = () => {
                                 <button
                                   className="main-button visible"
                                   onClick={() =>
-                                    handleClickAddEditItem(
+                                    handleClickAddNewEditItem(
                                       publisher,
                                       "Publisher"
                                     )
@@ -406,55 +469,64 @@ const AddBook = () => {
                           </div>
                         </td>
                         <td className="table__row-item">
-                          {releaseYear && (
-                            <div className="table__row-item--content-inner">
-                              <span>{releaseYear}</span>
-                              <button
-                                className="main-button visible"
-                                onClick={() =>
-                                  handleClickAddEditItem(
-                                    releaseYear,
-                                    "Release year"
-                                  )
-                                }
-                              >
-                                <Edit fontSize="small" />
-                              </button>
-                            </div>
-                          )}
+                          <div className="table__row-item--content">
+                            {releaseYear && (
+                              <div className="table__row-item--content-inner">
+                                <span>{releaseYear}</span>
+                                <button
+                                  className="main-button visible"
+                                  onClick={() =>
+                                    handleClickAddNewEditItem(
+                                      releaseYear,
+                                      "Release year"
+                                    )
+                                  }
+                                >
+                                  <Edit fontSize="small" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </td>
                         <td className="table__row-item">
-                          {pagesCount && (
-                            <div className="table__row-item--content-inner">
-                              <span>{pagesCount}</span>
-                              <button
-                                className="main-button visible"
-                                onClick={() =>
-                                  handleClickAddEditItem(
-                                    pagesCount,
-                                    "Pages count"
-                                  )
-                                }
-                              >
-                                <Edit fontSize="small" />
-                              </button>
-                            </div>
-                          )}
+                          <div className="table__row-item--content">
+                            {pagesCount && (
+                              <div className="table__row-item--content-inner">
+                                <span>{pagesCount}</span>
+                                <button
+                                  className="main-button visible"
+                                  onClick={() =>
+                                    handleClickAddNewEditItem(
+                                      pagesCount,
+                                      "Pages count"
+                                    )
+                                  }
+                                >
+                                  <Edit fontSize="small" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </td>
                         <td className="table__row-item">
-                          {quantity && (
-                            <div className="table__row-item--content-inner">
-                              <span>{quantity}</span>
-                              <button
-                                className="main-button visible"
-                                onClick={() =>
-                                  handleClickAddEditItem(quantity, "Quantity")
-                                }
-                              >
-                                <Edit fontSize="small" />
-                              </button>
-                            </div>
-                          )}
+                          <div className="table__row-item--content">
+                            {quantity && (
+                              <div className="table__row-item--content-inner">
+                                <span>{quantity}</span>
+                                <button
+                                  className="main-button visible"
+                                  onClick={() =>
+                                    handleClickAddNewEditItem(
+                                      quantity,
+                                      "Quantity"
+                                    )
+                                  }
+                                >
+                                  <Edit fontSize="small" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     </tbody>
@@ -473,8 +545,8 @@ const AddBook = () => {
                     onChange={(e) => handleChangeInput(e)}
                   />
                   {isInputVisible &&
-                    ((inputLabel === "Genre" && genres.length > 1) ||
-                      (inputLabel === "Author" && authors.length > 1)) && (
+                    ((inputLabel === "Genres" && genres.length > 1) ||
+                      (inputLabel === "Authors" && authors.length > 1)) && (
                       <button
                         className="link-button cancel visible"
                         disabled={!isInputVisible}
@@ -483,47 +555,47 @@ const AddBook = () => {
                         <DeleteOutline fontSize="small" />
                       </button>
                     )}
+                  {!isCheckedField &&
+                    (inputLabel === "Title" || inputLabel === "Authors") && (
+                      <button
+                        className={`main-button ${isInputVisible && "visible"}`}
+                        disabled={!isInputVisible}
+                        onClick={handleClickCheckItem}
+                      >
+                        <QuestionMark fontSize="small" />
+                        <span>Check</span>
+                      </button>
+                    )}
 
                   <button
-                    className={`main-button ${isInputVisible && "visible"}`}
-                    disabled={!isInputVisible}
-                    onClick={handleClickCancelItem}
-                  >
-                    <Clear fontSize="small" />
-                    <span>Cancel</span>
-                  </button>
-                  <button
                     className={`main-button ${
-                      inputContent.value && isInputVisible && "visible"
+                      inputContent.value &&
+                      isInputVisible &&
+                      isCheckedField &&
+                      "visible"
                     }`}
                     disabled={
-                      !inputContent.value || !isInputVisible || inputError
+                      !inputContent.value ||
+                      !isInputVisible ||
+                      inputError ||
+                      !isCheckedField
                     }
                     onClick={handleClickConfirmItem}
                   >
                     <Check fontSize="small" />
-                    <span>Add new</span>
+                    {inputLabel === "Title" || inputLabel === "Authors" ? (
+                      <span>Add new</span>
+                    ) : (
+                      <span> Add</span>
+                    )}
                   </button>
-                  {/* {inputLabel === "Author" && inputContent.value && (
-                    <div className="check-box-container">
-                      <label className="check-box-label">
-                        <input
-                          type="checkbox"
-                          className="check-box-input"
-                          checked={isChecked}
-                          onChange={handleRadioChange}
-                        />
-                        New
-                      </label>
-                    </div>
-                  )} */}
                 </div>
 
                 <div className="card__body-buttons">
                   <button
                     className="main-button visible"
                     disabled={
-                      !title ||
+                      !writing ||
                       genres.length < 1 ||
                       authors.length < 1 ||
                       !publisher ||
@@ -543,10 +615,21 @@ const AddBook = () => {
               <div className="card__body-container">
                 <div className="check-book">
                   <h4>Check book for uniqueness</h4>
-                  <Input
-                    visibility={true}
-                    placeholder="Example: title=Harry Potter, releaseYear=1997"
-                  />
+                  <div className="card__body-buttons">
+                    <Input
+                      value={inputSearchContent}
+                      onChange={(e) => setInputSearchContent(e.target.value)}
+                      visibility={true}
+                      placeholder="Example: title=Harry Potter; releaseYear=1997"
+                    />
+                    <button
+                      className="main-button visible"
+                      onClick={handleClickSearch}
+                    >
+                      <SearchOutlined fontSize="small" />
+                      <span>Search</span>
+                    </button>
+                  </div>
                   <div className="check-book__search-results">
                     <div className="card__body-container--item">
                       <div className="dash-book-card">
@@ -596,66 +679,106 @@ const AddBook = () => {
                             </tr>
                           </thead>
                           <tbody className="table__body">
-                            <tr className="table__row odd">
-                              <td className="table__row-item">
-                                <div
-                                  className="book-cover"
-                                  style={{
-                                    backgroundImage:
-                                      "url(https://i.pinimg.com/originals/d0/0a/20/d00a20365c0303a5e4b450ed8b334587.jpg)",
-                                  }}
-                                ></div>
-                              </td>
-                              <td className="table__row-item">
-                                <div className="table__row-item--content">
-                                  <div className="table__row-item--content-inner">
-                                    Harry Potter
+                            {books?.map((book) => (
+                              <tr className="table__row" key={book.book_id}>
+                                <td className="table__row-item">
+                                  <div
+                                    className="book-cover"
+                                    style={{
+                                      backgroundImage: `url(${book?.cover_url})`,
+                                    }}
+                                  ></div>
+                                </td>
+                                <td className="table__row-item">
+                                  <div className="table__row-item--content">
+                                    <div className="table__row-item--content-inner">
+                                      {book?.writing?.title}
+                                      <button
+                                        className={`main-button ${
+                                          inputLabel === "Title" && "visible"
+                                        }`}
+                                        disabled={inputLabel !== "Title"}
+                                        onClick={() => {
+                                          handleClickAddExistItem(
+                                            book?.writing?.title,
+                                            "Title",
+                                            book?.writing.writing_id
+                                          );
+                                        }}
+                                      >
+                                        <Add fontSize="small" />
+                                      </button>
+                                    </div>
                                   </div>
-                                </div>
-                              </td>
-                              <td className="table__row-item">
-                                <div className="table__row-item--content">
-                                  <div className="table__row-item--content-inner">
-                                    Fantasy
+                                </td>
+                                <td className="table__row-item">
+                                  <div className="table__row-item--content">
+                                    {book?.genres?.map((genre) => (
+                                      <div className="table__row-item--content-inner">
+                                        <span key={genre?.genre_id}>
+                                          {genre?.genre_name}
+                                        </span>
+                                      </div>
+                                    ))}
                                   </div>
-                                </div>
-                              </td>
-                              <td className="table__row-item">
-                                <div className="table__row-item--content">
-                                  <div className="table__row-item--content-inner">
-                                    J. K. Rowling
+                                </td>
+                                <td className="table__row-item">
+                                  <div className="table__row-item--content">
+                                    {book?.authors.map((author) => (
+                                      <div className="table__row-item--content-inner">
+                                        <span key={author?.author_id}>
+                                          {author?.full_name}
+                                        </span>
+                                        <button
+                                          className={`main-button ${
+                                            inputLabel === "Authors" &&
+                                            "visible"
+                                          }`}
+                                          disabled={inputLabel !== "Authors"}
+                                          onClick={() =>
+                                            handleClickAddExistItem(
+                                              author.full_name,
+                                              "Authors",
+                                              author.author_id
+                                            )
+                                          }
+                                        >
+                                          <Add fontSize="small" />
+                                        </button>
+                                      </div>
+                                    ))}
                                   </div>
-                                </div>
-                              </td>
-                              <td className="table__row-item">
-                                <div className="table__row-item--content">
-                                  <div className="table__row-item--content-inner">
-                                    Bloomsbury
+                                </td>
+                                <td className="table__row-item">
+                                  <div className="table__row-item--content">
+                                    <div className="table__row-item--content-inner">
+                                      {book?.publisher?.publisher_name}
+                                    </div>
                                   </div>
-                                </div>
-                              </td>
-                              <td className="table__row-item">
-                                <div className="table__row-item--content">
-                                  <div className="table__row-item--content-inner">
-                                    1997
+                                </td>
+                                <td className="table__row-item">
+                                  <div className="table__row-item--content">
+                                    <div className="table__row-item--content-inner">
+                                      {book?.release_year}
+                                    </div>
                                   </div>
-                                </div>
-                              </td>
-                              <td className="table__row-item">
-                                <div className="table__row-item--content">
-                                  <div className="table__row-item--content-inner">
-                                    123
+                                </td>
+                                <td className="table__row-item">
+                                  <div className="table__row-item--content">
+                                    <div className="table__row-item--content-inner">
+                                      {book?.pages_count}
+                                    </div>
                                   </div>
-                                </div>
-                              </td>
-                              <td className="table__row-item">
-                                <div className="table__row-item--content">
-                                  <div className="table__row-item--content-inner">
-                                    5
+                                </td>
+                                <td className="table__row-item">
+                                  <div className="table__row-item--content">
+                                    <div className="table__row-item--content-inner">
+                                      {book?.quantity}
+                                    </div>
                                   </div>
-                                </div>
-                              </td>
-                            </tr>
+                                </td>
+                              </tr>
+                            ))}
                           </tbody>
                         </table>
                       </div>

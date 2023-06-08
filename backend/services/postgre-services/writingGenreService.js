@@ -29,6 +29,7 @@ class WritingGenreService {
 
   async createWritingGenre(writing_id, genresIds, category) {
     try {
+      console.log(writing_id, genresIds);
       const writingGenreData = await pgPool(category).query(
         `insert into WritingGenre(writing_num, genre_num)
             select $1, unnest($2::uuid[])

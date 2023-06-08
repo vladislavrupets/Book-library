@@ -48,12 +48,14 @@
   padding: 10px;
   background-color: #ebeff8;
 }
-
+.book-list__search-results,
 .check-book__search-results {
   overflow-y: auto;
-  max-height: 325px;
-  height: 325px;
   display: flex;
   flex-direction: column;
   margin-top: 20px;
+}
+
+.check-book__search-results {
+  height: 325px;
 }
