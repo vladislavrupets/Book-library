@@ -11,7 +11,7 @@ import { fetchUser } from "../../store/authSlice";
 
 const Container = () => {
   const dispatch = useDispatch();
-  const { user, status, error } = useSelector((state) => state.auth);
+  const { authInfo, status, error } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(fetchUser());
@@ -32,7 +32,7 @@ const Container = () => {
           <NaviBar />
         </header>
         <div className="inner-container">
-          {user.category === "administrator" && "librarian" ? (
+          {authInfo?.category === "administrator" && "librarian" ? (
             <aside className="inner-container__aside">
               <DashboardSidebar />
             </aside>
@@ -40,7 +40,7 @@ const Container = () => {
 
           <main
             className={
-              user.category === "administrator" && "librarian"
+              authInfo?.category === "administrator" && "librarian"
                 ? "inner-container__content with-aside"
                 : "inner-container__content"
             }

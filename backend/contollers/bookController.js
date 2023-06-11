@@ -9,7 +9,13 @@ const publisherService = require("../services/postgre-services/publisherService"
 class BookController {
   async getBooks(req, res) {
     try {
-      const booksInfo = await bookService.getBooksInfo(req.body.category);
+      const { offset, itemsPerPage } = req.params;
+
+      const booksInfo = await bookService.getBooksInfo(
+        req.body.category,
+        offset,
+        itemsPerPage
+      );
       res.status(200).json(booksInfo);
     } catch (err) {
       if (err.code === 404) {

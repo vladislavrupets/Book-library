@@ -3,9 +3,10 @@ import Axios from "../utilities/axiosConfig";
 
 export const fetchBooks = createAsyncThunk(
   "books/fetchBooks",
-  async (_, { rejectWithValue }) => {
+  async ({ currentPage, itemsPerPage }, { rejectWithValue }) => {
     try {
-      const res = await Axios.get("/books/get-all");
+      const offset = (currentPage - 1) * itemsPerPage;
+      const res = await Axios.get(`/books/get-all/${offset}/${itemsPerPage}`);
       return res.data;
     } catch (err) {
       return rejectWithValue(err.response.data);

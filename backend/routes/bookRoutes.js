@@ -4,7 +4,7 @@ const router = new Router();
 const bookController = require("../contollers/bookController");
 
 router.post("/add-book", bookController.addBook);
-router.get("/get-all", bookController.getBooks);
+router.get("/get-all/:offset/:itemsPerPage", bookController.getBooks);
 router.post("/search-books", bookController.searchBooks);
 // router.get("/writing/get-all", bookController.getWritings);
 // router.get("/writing/search/:searchTerm", bookController.searchWritings);

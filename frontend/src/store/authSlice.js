@@ -51,7 +51,7 @@ export const fetchUser = createAsyncThunk(
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: null,
+    authInfo: null,
     status: null,
     error: null,
   },
@@ -64,7 +64,7 @@ const authSlice = createSlice({
       })
       .addCase(register.fulfilled, (state, action) => {
         state.status = "resolved";
-        state.user = action.payload;
+        state.authInfo = action.payload;
       })
       .addCase(register.rejected, (state, action) => {
         state.status = "rejected";
@@ -76,7 +76,7 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.status = "resolved";
-        state.user = action.payload;
+        state.authInfo = action.payload;
       })
       .addCase(login.rejected, (state, action) => {
         state.status = "rejected";
@@ -89,11 +89,11 @@ const authSlice = createSlice({
       })
       .addCase(logout.fulfilled, (state) => {
         state.status = "resolved";
-        state.user = null;
+        state.authInfo = null;
       })
       .addCase(logout.rejected, (state, action) => {
         state.status = "rejected";
-        state.user = null;
+        state.authInfo = null;
         state.error = action.payload;
       })
       .addCase(fetchUser.pending, (state) => {
@@ -102,7 +102,8 @@ const authSlice = createSlice({
       })
       .addCase(fetchUser.fulfilled, (state, action) => {
         state.status = "resolved";
-        state.user = action.payload;
+        state.authInfo = action.payload;
+        console.log(action.payload);
       })
       .addCase(fetchUser.rejected, (state, action) => {
         state.status = "rejected";

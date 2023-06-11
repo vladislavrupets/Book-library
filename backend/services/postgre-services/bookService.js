@@ -110,7 +110,7 @@ class BookService {
     }
   }
 
-  async getBooksInfo(category) {
+  async getBooksInfo(category, offset, limit) {
     try {
       const booksData = await pgPool(category).query(
         `select b.book_id, ${queryJsonBAgg}, b.release_year, b.pages_count, b.quantity, b.cover_url
@@ -119,7 +119,9 @@ class BookService {
           join Writing wr on wr.writing_id = b.writing_num
         group by
           b.book_id, wr.title, wr.writing_id, p.publisher_name, p.publisher_id,
-          b.release_year, b.pages_count, b.quantity, b.cover_url`
+          b.release_year, b.pages_count, b.quantity, b.cover_url
+          offset $1 limit $2`,
+        [offset, limit]
       );
 
       return booksData.rows;
@@ -180,8 +182,6 @@ class BookService {
 
     const client = await pgPool(category).connect();
     try {
-      await client.query("begin");
-
       await client.query(
         `insert into Book
             (writing_num, release_year, publisher_num, pages_count, quantity, cover_url)
@@ -195,17 +195,12 @@ class BookService {
           cover_url,
         ]
       );
-
-      await client.query("commit");
     } catch (err) {
-      await client.query("rollback");
-
       console.error(err);
       throw { code: 500 };
-    } finally {
-      client.release();
     }
   }
+  async updateBook() {}
 }
 
 module.exports = new BookService();

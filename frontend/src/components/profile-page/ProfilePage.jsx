@@ -5,7 +5,7 @@ import { fetchUser } from "../../store/authSlice";
 import "./profilePage.css";
 
 const ProfilePage = () => {
-  const { user, status, error } = useSelector((state) => state.auth);
+  const { authInfo, status, error } = useSelector((state) => state.auth);
 
   return (
     <div className="content-container">
@@ -18,11 +18,11 @@ const ProfilePage = () => {
             <div className="card__body-container--item">
               <div className="card__body-container">
                 <h3>Name:</h3>
-                <span>{user.full_name}</span>
+                <span>{authInfo.full_name}</span>
                 <h3>Login:</h3>
-                <span>{user.login}</span>
+                <span>{authInfo.login}</span>
                 <h3>Phone number:</h3>
-                <span>{user.phone_number}</span>
+                <span>{authInfo.phone_number}</span>
               </div>
             </div>
           </div>

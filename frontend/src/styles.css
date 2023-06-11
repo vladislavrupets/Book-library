@@ -113,6 +113,10 @@
   border-top-right-radius: 10px;
 }
 
+.table__header-item:first-child {
+  border-top-left-radius: 10px;
+}
+
 .table__row:last-child .table__row-item:last-child {
   border-bottom-right-radius: 10px;
 }

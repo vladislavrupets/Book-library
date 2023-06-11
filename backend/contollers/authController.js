@@ -32,6 +32,7 @@ class AuthController {
       const userInfo = await userService.getUserByData(_user, "connect_user");
       req.session.user = {
         user_id: userInfo.user_id,
+        login: userInfo.login,
         full_name: userInfo.full_name,
         phone_number: userInfo.phone_number,
         trust_rating: userInfo.trust_rating,

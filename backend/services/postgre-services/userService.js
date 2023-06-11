@@ -84,7 +84,7 @@ class UserService {
 
   async deleteUser(user, category) {
     try {
-      await pgPool(category).query("delete from users where user_id = $1", [
+      await pgPool(category).query("delete from Users where user_id = $1", [
         user.user_id,
       ]);
     } catch (err) {
