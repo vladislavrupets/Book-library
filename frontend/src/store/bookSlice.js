@@ -9,6 +9,7 @@ export const fetchBooks = createAsyncThunk(
       const res = await Axios.get(`/books/get-all/${offset}/${itemsPerPage}`);
       return res.data;
     } catch (err) {
+      console.log(err);
       return rejectWithValue(err.response.data);
     }
   }
@@ -40,10 +41,17 @@ export const editBook = createAsyncThunk(
 
 export const searchBooks = createAsyncThunk(
   "books/searchBooks",
-  async (searchData, { rejectWithValue }) => {
+  async ({ currentPage, itemsPerPage, searchData }, { rejectWithValue }) => {
     try {
-      const res = await Axios.post("/books/search-books", { searchData });
-      console.log(res.data);
+      const offset = (currentPage - 1) * itemsPerPage;
+      let url = `/books/search-books/${offset}/${itemsPerPage}`;
+
+      if (searchData) {
+        url += `/${searchData}`;
+      }
+
+      const res = await Axios.get(url);
+
       return res.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -151,6 +159,7 @@ const booksSlice = createSlice({
   name: "books",
   initialState: {
     books: [],
+    booksCount: 0,
     status: null,
     error: null,
   },
@@ -163,11 +172,12 @@ const booksSlice = createSlice({
       })
       .addCase(fetchBooks.fulfilled, (state, action) => {
         state.status = "resolved";
-        state.books = action.payload;
+        state.books = action.payload.booksInfo;
+        state.booksCount = action.payload.booksCount;
       })
       .addCase(fetchBooks.rejected, (state, action) => {
         state.status = "rejected";
-        state.error = action.payload;
+        state.error = action.payload.books;
       })
 
       .addCase(addBook.pending, (state) => {
@@ -176,7 +186,7 @@ const booksSlice = createSlice({
       })
       .addCase(addBook.fulfilled, (state, action) => {
         state.status = "resolved";
-        state.books.push(action.payload);
+        state.books.push(action.payload.booksInfo);
       })
       .addCase(addBook.rejected, (state, action) => {
         state.status = "rejected";
@@ -206,11 +216,12 @@ const booksSlice = createSlice({
       })
       .addCase(searchBooks.fulfilled, (state, action) => {
         state.status = "resolved";
-        state.books = action.payload;
+        state.books = action.payload.booksInfo;
+        state.booksCount = action.payload.booksCount;
       })
       .addCase(searchBooks.rejected, (state, action) => {
         state.status = "rejected";
-        state.error = action.payload.error;
+        state.error = action.payload;
         state.books = [];
       });
 

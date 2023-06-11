@@ -172,7 +172,7 @@ button {
   transition: background-color 0.2s, transform 0.2s;
   background-color: #c2e7ff;
   opacity: 0;
-  transition: opacity 0.1s ease-in-out;
+  transition: opacity 0.1s ease-in-out, background-color 0.1s, transform 0.1s;
 }
 
 .main-button.visible {
@@ -206,7 +206,7 @@ button {
   padding: 3px 7px;
   font-size: 16px;
   opacity: 0;
-  transition: opacity 0.2s ease-in-out, background-color 0.2s, transform 0.2s;
+  transition: opacity 0.1s ease-in-out, background-color 0.1s, transform 0.1s;
 }
 
 .link-button.visible {

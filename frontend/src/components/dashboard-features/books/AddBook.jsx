@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Add,
@@ -13,10 +13,16 @@ import {
 import "./bookStyles.css";
 import { addBook, searchBooks } from "../../../store/bookSlice";
 import Input from "../../custom-elements/input/Input";
+import Pagination from "../../custom-elements/pagination/Pagination";
+
+const itemsPerPage = 3;
 
 const AddBook = () => {
   const dispatch = useDispatch();
-  const { books, status, error } = useSelector((state) => state.book);
+  const { books, booksCount, status, error } = useSelector(
+    (state) => state.book
+  );
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [cover, setCover] = useState("");
   const [writing, setWriting] = useState({
@@ -64,7 +70,18 @@ const AddBook = () => {
   };
 
   const handleClickSearch = () => {
-    dispatch(searchBooks(inputSearchContent));
+    setCurrentPage(1);
+    dispatch(
+      searchBooks({ currentPage, itemsPerPage, searchData: inputSearchContent })
+    );
+  };
+
+  useEffect(() => {
+    dispatch(searchBooks({ currentPage, itemsPerPage }));
+  }, [dispatch, currentPage, itemsPerPage]);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   const handleClickCheckItem = () => {
@@ -630,159 +647,172 @@ const AddBook = () => {
                       <span>Search</span>
                     </button>
                   </div>
-                  <div className="check-book__search-results">
-                    <div className="card__body-container--item">
-                      <div className="dash-book-card">
-                        <table className="table">
-                          <thead className="table__header">
-                            <tr>
-                              <th className="table__header-item">
-                                <div className="table__header-item--content">
-                                  Cover
-                                </div>
-                              </th>
-                              <th className="table__header-item">
-                                <div className="table__header-item--content">
-                                  Title
-                                </div>
-                              </th>
-                              <th className="table__header-item">
-                                <div className="table__header-item--content">
-                                  Genres
-                                </div>
-                              </th>
-                              <th className="table__header-item">
-                                <div className="table__header-item--content">
-                                  Authors
-                                </div>
-                              </th>
-                              <th className="table__header-item">
-                                <div className="table__header-item--content">
-                                  Publisher
-                                </div>
-                              </th>
-                              <th className="table__header-item">
-                                <div className="table__header-item--content">
-                                  Release year
-                                </div>
-                              </th>
-                              <th className="table__header-item">
-                                <div className="table__header-item--content">
-                                  Pages count
-                                </div>
-                              </th>
-                              <th className="table__header-item">
-                                <div className="table__header-item--content">
-                                  Quantity
-                                </div>
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody className="table__body">
-                            {books?.map((book) => (
-                              <tr className="table__row" key={book.book_id}>
-                                <td className="table__row-item">
-                                  <div
-                                    className="book-cover"
-                                    style={{
-                                      backgroundImage: `url(${book?.cover_url})`,
-                                    }}
-                                  ></div>
-                                </td>
-                                <td className="table__row-item">
-                                  <div className="table__row-item--content">
-                                    <div className="table__row-item--content-inner">
-                                      {book?.writing?.title}
-                                      <button
-                                        className={`main-button ${
-                                          inputLabel === "Title" && "visible"
-                                        }`}
-                                        disabled={inputLabel !== "Title"}
-                                        onClick={() => {
-                                          handleClickAddExistItem(
-                                            book?.writing?.title,
-                                            "Title",
-                                            book?.writing.writing_id
-                                          );
-                                        }}
-                                      >
-                                        <Add fontSize="small" />
-                                      </button>
-                                    </div>
+                  <div className="card__body-container--item">
+                    <div className="check-book__search-results">
+                      {status === "loading" ? (
+                        <div>Loading...</div>
+                      ) : status === "rejected" ? (
+                        <div>{error}</div>
+                      ) : (
+                        <div className="dash-book-card">
+                          <table className="table">
+                            <thead className="table__header">
+                              <tr>
+                                <th className="table__header-item">
+                                  <div className="table__header-item--content">
+                                    Cover
                                   </div>
-                                </td>
-                                <td className="table__row-item">
-                                  <div className="table__row-item--content">
-                                    {book?.genres?.map((genre) => (
-                                      <div className="table__row-item--content-inner">
-                                        <span key={genre?.genre_id}>
-                                          {genre?.genre_name}
-                                        </span>
-                                      </div>
-                                    ))}
+                                </th>
+                                <th className="table__header-item">
+                                  <div className="table__header-item--content">
+                                    Title
                                   </div>
-                                </td>
-                                <td className="table__row-item">
-                                  <div className="table__row-item--content">
-                                    {book?.authors.map((author) => (
+                                </th>
+                                <th className="table__header-item">
+                                  <div className="table__header-item--content">
+                                    Genres
+                                  </div>
+                                </th>
+                                <th className="table__header-item">
+                                  <div className="table__header-item--content">
+                                    Authors
+                                  </div>
+                                </th>
+                                <th className="table__header-item">
+                                  <div className="table__header-item--content">
+                                    Publisher
+                                  </div>
+                                </th>
+                                <th className="table__header-item">
+                                  <div className="table__header-item--content">
+                                    Release year
+                                  </div>
+                                </th>
+                                <th className="table__header-item">
+                                  <div className="table__header-item--content">
+                                    Pages count
+                                  </div>
+                                </th>
+                                <th className="table__header-item">
+                                  <div className="table__header-item--content">
+                                    Quantity
+                                  </div>
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody className="table__body">
+                              {books?.map((book) => (
+                                <tr className="table__row" key={book.book_id}>
+                                  <td className="table__row-item">
+                                    <div
+                                      className="book-cover"
+                                      style={{
+                                        backgroundImage: `url(${book?.cover_url})`,
+                                      }}
+                                    ></div>
+                                  </td>
+                                  <td className="table__row-item">
+                                    <div className="table__row-item--content">
                                       <div className="table__row-item--content-inner">
-                                        <span key={author?.author_id}>
-                                          {author?.full_name}
-                                        </span>
+                                        {book?.writing?.title}
                                         <button
                                           className={`main-button ${
-                                            inputLabel === "Authors" &&
-                                            "visible"
+                                            inputLabel === "Title" && "visible"
                                           }`}
-                                          disabled={inputLabel !== "Authors"}
-                                          onClick={() =>
+                                          disabled={inputLabel !== "Title"}
+                                          onClick={() => {
                                             handleClickAddExistItem(
-                                              author.full_name,
-                                              "Authors",
-                                              author.author_id
-                                            )
-                                          }
+                                              book?.writing?.title,
+                                              "Title",
+                                              book?.writing.writing_id
+                                            );
+                                          }}
                                         >
                                           <Add fontSize="small" />
                                         </button>
                                       </div>
-                                    ))}
-                                  </div>
-                                </td>
-                                <td className="table__row-item">
-                                  <div className="table__row-item--content">
-                                    <div className="table__row-item--content-inner">
-                                      {book?.publisher?.publisher_name}
                                     </div>
-                                  </div>
-                                </td>
-                                <td className="table__row-item">
-                                  <div className="table__row-item--content">
-                                    <div className="table__row-item--content-inner">
-                                      {book?.release_year}
+                                  </td>
+                                  <td className="table__row-item">
+                                    <div className="table__row-item--content">
+                                      {book?.genres?.map((genre) => (
+                                        <div className="table__row-item--content-inner">
+                                          <span key={genre?.genre_id}>
+                                            {genre?.genre_name}
+                                          </span>
+                                        </div>
+                                      ))}
                                     </div>
-                                  </div>
-                                </td>
-                                <td className="table__row-item">
-                                  <div className="table__row-item--content">
-                                    <div className="table__row-item--content-inner">
-                                      {book?.pages_count}
+                                  </td>
+                                  <td className="table__row-item">
+                                    <div className="table__row-item--content">
+                                      {book?.authors.map((author) => (
+                                        <div className="table__row-item--content-inner">
+                                          <span key={author?.author_id}>
+                                            {author?.full_name}
+                                          </span>
+                                          <button
+                                            className={`main-button ${
+                                              inputLabel === "Authors" &&
+                                              "visible"
+                                            }`}
+                                            disabled={inputLabel !== "Authors"}
+                                            onClick={() =>
+                                              handleClickAddExistItem(
+                                                author.full_name,
+                                                "Authors",
+                                                author.author_id
+                                              )
+                                            }
+                                          >
+                                            <Add fontSize="small" />
+                                          </button>
+                                        </div>
+                                      ))}
                                     </div>
-                                  </div>
-                                </td>
-                                <td className="table__row-item">
-                                  <div className="table__row-item--content">
-                                    <div className="table__row-item--content-inner">
-                                      {book?.quantity}
+                                  </td>
+                                  <td className="table__row-item">
+                                    <div className="table__row-item--content">
+                                      <div className="table__row-item--content-inner">
+                                        {book?.publisher?.publisher_name}
+                                      </div>
                                     </div>
-                                  </div>
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
+                                  </td>
+                                  <td className="table__row-item">
+                                    <div className="table__row-item--content">
+                                      <div className="table__row-item--content-inner">
+                                        {book?.release_year}
+                                      </div>
+                                    </div>
+                                  </td>
+                                  <td className="table__row-item">
+                                    <div className="table__row-item--content">
+                                      <div className="table__row-item--content-inner">
+                                        {book?.pages_count}
+                                      </div>
+                                    </div>
+                                  </td>
+                                  <td className="table__row-item">
+                                    <div className="table__row-item--content">
+                                      <div className="table__row-item--content-inner">
+                                        {book?.quantity}
+                                      </div>
+                                    </div>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
                     </div>
+                  </div>
+                  <div className="card__body-container--item">
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={Math.ceil(booksCount / itemsPerPage)}
+                      onPageChange={handlePageChange}
+                    />
                   </div>
                 </div>
               </div>

@@ -10,13 +10,16 @@ class BookController {
   async getBooks(req, res) {
     try {
       const { offset, itemsPerPage } = req.params;
+      const { category } = req.body;
 
       const booksInfo = await bookService.getBooksInfo(
-        req.body.category,
+        category,
         offset,
         itemsPerPage
       );
-      res.status(200).json(booksInfo);
+      const booksCount = await bookService.getBooksCount(category);
+
+      res.status(200).json({ booksInfo, booksCount });
     } catch (err) {
       if (err.code === 404) {
         res.status(404).json(err.message);
@@ -125,10 +128,18 @@ class BookController {
 
   async searchBooks(req, res) {
     try {
-      const { searchData } = req.body;
-      const booksInfo = await bookService.searchBooksInfo(searchData);
+      const { category } = req.body;
+      const { offset, itemsPerPage, searchData } = req.params;
 
-      res.status(200).json(booksInfo);
+      const booksInfo = await bookService.searchBooksInfo(
+        offset,
+        itemsPerPage,
+        searchData,
+        category
+      );
+      const booksCount = await bookService.getBooksCount(category);
+
+      res.status(200).json({ booksInfo, booksCount });
     } catch (err) {
       if (err.code === 404) {
         res.status(404).json(err.message);

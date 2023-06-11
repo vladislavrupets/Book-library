@@ -5,7 +5,10 @@ const bookController = require("../contollers/bookController");
 
 router.post("/add-book", bookController.addBook);
 router.get("/get-all/:offset/:itemsPerPage", bookController.getBooks);
-router.post("/search-books", bookController.searchBooks);
+router.get(
+  "/search-books/:offset/:itemsPerPage/:searchData?",
+  bookController.searchBooks
+);
 // router.get("/writing/get-all", bookController.getWritings);
 // router.get("/writing/search/:searchTerm", bookController.searchWritings);
 // router.get("/genre/get-all", bookController.getGenres);

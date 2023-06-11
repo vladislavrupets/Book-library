@@ -1,83 +1,90 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Add,
-  AddPhotoAlternate,
-  Check,
-  SearchOutlined,
-  QuestionMark,
-  Edit,
-  DeleteOutline,
-} from "@mui/icons-material";
+import { Add, SearchOutlined, Edit } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 
-import { fetchBooks, searchBooks } from "../../../store/bookSlice";
-import Input from "../../custom-elements/input/Input";
 import "./bookStyles.css";
+import { searchBooks } from "../../../store/bookSlice";
+import Input from "../../custom-elements/input/Input";
+import Pagination from "../../custom-elements/pagination/Pagination";
+
+const itemsPerPage = 10;
 
 const BookList = () => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  const { books, status } = useSelector((state) => state.book);
+  const { books, booksCount, status, error } = useSelector(
+    (state) => state.book
+  );
   const [inputSearchContent, setInputSearchContent] = useState("");
-
-  const handleClickSearch = () => {
-    dispatch(searchBooks(inputSearchContent));
-  };
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    dispatch(fetchBooks());
-  }, []);
+    dispatch(
+      searchBooks({
+        currentPage,
+        itemsPerPage,
+        searchData: inputSearchContent,
+      })
+    );
+  }, [dispatch, currentPage, itemsPerPage]);
 
-  if (status === "loading") {
-    return <div>Loading...</div>;
-  }
+  const handleClickSearch = () => {
+    setCurrentPage(1);
+    dispatch(
+      searchBooks({ currentPage, itemsPerPage, searchData: inputSearchContent })
+    );
+  };
 
-  if (status === "rejected") {
-    return <div>Error: {error}</div>;
-  }
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
-  if (status === "resolved") {
-    return (
-      <div className="content-container">
-        <div className="content-container__header">
-          <h2 className="content-container__header-title">Books</h2>
-        </div>
-        <div className="content-container__item">
-          <div className="card">
-            <div className="card__header">
-              <h3 className="card__header-title">Book list</h3>
-              <div className="card__header-buttons">
-                <button
-                  className="main-button visible"
-                  onClick={() => navigate("/dashboard/books/add-book")}
-                >
-                  <Add />
-                  <span>Add book</span>
-                </button>
-              </div>
+  return (
+    <div className="content-container">
+      <div className="content-container__header">
+        <h2 className="content-container__header-title">Books</h2>
+      </div>
+      <div className="content-container__item">
+        <div className="card">
+          <div className="card__header">
+            <h3 className="card__header-title">Book list</h3>
+            <div className="card__header-buttons">
+              <button
+                className="main-button visible"
+                onClick={() => navigate("/dashboard/books/add-book")}
+              >
+                <Add />
+                <span>Add book</span>
+              </button>
             </div>
-            <div className="card__body">
-              <div className="card__body-container--item">
-                <div className="card__body-container">
-                  <div className="card__body-buttons">
-                    <Input
-                      value={inputSearchContent}
-                      onChange={(e) => setInputSearchContent(e.target.value)}
-                      visibility={true}
-                      placeholder="Example: title=Harry Potter; releaseYear=1997"
-                    />
-                    <button
-                      className="main-button visible"
-                      onClick={handleClickSearch}
-                    >
-                      <SearchOutlined fontSize="small" />
-                      <span>Search</span>
-                    </button>
-                  </div>
+          </div>
+          <div className="card__body">
+            <div className="card__body-container--item">
+              <div className="card__body-container">
+                <div className="card__body-buttons">
+                  <Input
+                    value={inputSearchContent}
+                    onChange={(e) => setInputSearchContent(e.target.value)}
+                    visibility={true}
+                    placeholder="Example: title=Harry Potter; releaseYear=1997"
+                  />
+                  <button
+                    className="main-button visible"
+                    onClick={handleClickSearch}
+                  >
+                    <SearchOutlined fontSize="small" />
+                    <span>Search</span>
+                  </button>
+                </div>
+                <div className="card__body-container--item">
                   <div className="book-list__search-results">
-                    <div className="card__body-container--item">
+                    {status === "loading" ? (
+                      <div>Loading...</div>
+                    ) : status === "rejected" ? (
+                      <div>{error}</div>
+                    ) : (
                       <div className="dash-book-card">
                         <table className="table">
                           <thead className="table__header">
@@ -217,16 +224,23 @@ const BookList = () => {
                           </tbody>
                         </table>
                       </div>
-                    </div>
+                    )}
                   </div>
+                </div>
+                <div className="card__body-container--item">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={Math.ceil(booksCount / itemsPerPage)}
+                    onPageChange={handlePageChange}
+                  />
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 };
 
 export default BookList;

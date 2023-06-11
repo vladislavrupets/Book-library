@@ -33,11 +33,10 @@ const queryJsonBAgg = `
   ) as publisher`;
 
 class BookService {
-  async searchBooksInfo(searchData, category) {
-    console.log(searchData);
+  async searchBooksInfo(offset, itemsPerPage, searchData, category) {
     try {
-      let query = `SELECT b.book_id, ${queryJsonBAgg}, b.release_year, b.pages_count, b.quantity, b.cover_url
-    FROM Book b
+      let query = `select b.book_id, ${queryJsonBAgg}, b.release_year, b.pages_count, b.quantity, b.cover_url
+    from Book b
       join Publisher p ON p.publisher_id = b.publisher_num
       join Writing wr ON wr.writing_id = b.writing_num
       join WritingAuthor wa ON wa.writing_num = wr.writing_id
@@ -45,54 +44,56 @@ class BookService {
       join WritingGenre wg ON wg.writing_num = wr.writing_id
       join Genre g ON g.genre_id = wg.genre_num
     `;
-
-      const conditions = [];
-      const params = searchData.split(";");
-      params.forEach((param) => {
-        const [field, value] = param.split("=");
-        if (value) {
-          switch (field) {
-            case "title":
-              conditions.push(`wr.title ilike '%${value}%'`);
-              break;
-            case "authors":
-              const authors = value.split(",");
-              const authorConditions = authors.map(
-                (author) => `au.full_name ilike any(array['%${author}%'])`
-              );
-              conditions.push(`(${authorConditions.join(" or ")})`);
-              break;
-            case "genres":
-              const genres = value.split(",");
-              const genreConditions = genres.map(
-                (genre) => `g.genre_name ilike any(array['%${genre}%'])`
-              );
-              conditions.push(`(${genreConditions.join(" or ")})`);
-              break;
-            case "publisher":
-              conditions.push(`p.publisher_name ilike '%${value}%'`);
-              break;
-            case "releaseYear":
-              const releaseYear = parseInt(value);
-              if (!isNaN(releaseYear)) {
-                conditions.push(`b.release_year = ${releaseYear}`);
-              }
-              break;
-            case "pagesCount":
-              conditions.push(`b.pages_count = ${value}`);
-              break;
-            default:
-              break;
+      if (searchData) {
+        const conditions = [];
+        const params = searchData.split(";");
+        params.forEach((param) => {
+          const [field, value] = param.split("=");
+          if (value) {
+            switch (field) {
+              case "title":
+                conditions.push(`wr.title ilike '%${value}%'`);
+                break;
+              case "authors":
+                const authors = value.split(",");
+                const authorConditions = authors.map(
+                  (author) => `au.full_name ilike any(array['%${author}%'])`
+                );
+                conditions.push(`(${authorConditions.join(" or ")})`);
+                break;
+              case "genres":
+                const genres = value.split(",");
+                const genreConditions = genres.map(
+                  (genre) => `g.genre_name ilike any(array['%${genre}%'])`
+                );
+                conditions.push(`(${genreConditions.join(" or ")})`);
+                break;
+              case "publisher":
+                conditions.push(`p.publisher_name ilike '%${value}%'`);
+                break;
+              case "releaseYear":
+                const releaseYear = parseInt(value);
+                if (!isNaN(releaseYear)) {
+                  conditions.push(`b.release_year = ${releaseYear}`);
+                }
+                break;
+              case "pagesCount":
+                conditions.push(`b.pages_count = ${value}`);
+                break;
+              default:
+                break;
+            }
           }
-        }
-      });
+        });
 
-      if (conditions.length > 0) {
-        query += `where ${conditions.join(" and ")}`;
+        if (conditions.length > 0) {
+          query += `where ${conditions.join(" and ")}`;
+        }
       }
 
       query += ` group by b.book_id, wr.title, wr.writing_id, p.publisher_name, p.publisher_id, 
-    b.release_year, b.pages_count, b.quantity, b.cover_url`;
+    b.release_year, b.pages_count, b.quantity, b.cover_url
+    offset ${offset} limit ${itemsPerPage}`;
 
       const booksData = await pgPool(category).query(query);
       if (booksData.rowCount === 0) {
@@ -123,11 +124,17 @@ class BookService {
           offset $1 limit $2`,
         [offset, limit]
       );
-
+      if (booksData.rowCount === 0) {
+        throw { code: 404, message: "No books found" };
+      }
       return booksData.rows;
     } catch (err) {
-      console.error(err);
-      throw { code: 500 };
+      if (err.code === 404) {
+        throw err;
+      } else {
+        console.error(err);
+        throw { code: 500 };
+      }
     }
   }
 
@@ -180,9 +187,8 @@ class BookService {
       cover_url,
     } = book;
 
-    const client = await pgPool(category).connect();
     try {
-      await client.query(
+      await pgPool(category).query(
         `insert into Book
             (writing_num, release_year, publisher_num, pages_count, quantity, cover_url)
             values ($1, $2, $3, $4, $5, $6)`,
@@ -200,6 +206,21 @@ class BookService {
       throw { code: 500 };
     }
   }
+
+  async getBooksCount(category) {
+    try {
+      const countData = await pgPool(category).query(
+        "select count(*) from Book"
+      );
+
+      const totalCount = countData.rows[0].count;
+      return totalCount;
+    } catch (err) {
+      console.error(err);
+      throw { code: 500 };
+    }
+  }
+
   async updateBook() {}
 }
 
