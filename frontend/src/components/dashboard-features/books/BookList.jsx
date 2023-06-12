@@ -85,7 +85,7 @@ const BookList = () => {
                     ) : status === "rejected" ? (
                       <div>{error}</div>
                     ) : (
-                      <div className="dash-book-card">
+                      <div className="table-card">
                         <table className="table">
                           <thead className="table__header">
                             <tr>

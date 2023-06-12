@@ -76,6 +76,12 @@
 }
 
 /* Table */
+.table-card {
+  display: flex;
+  background-color: #bad3f0;
+  border-radius: 10px;
+}
+
 .table {
   table-layout: fixed;
   width: 100%;

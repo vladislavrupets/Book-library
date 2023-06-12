@@ -265,7 +265,7 @@ const AddBook = () => {
           <div className="card__body">
             <div className="card__body-container">
               <div className="card__body-container--item">
-                <div className="dash-book-card">
+                <div className="table-card">
                   <table className="table">
                     <thead className="table__header">
                       <tr>
@@ -670,7 +670,7 @@ const AddBook = () => {
                       ) : status === "rejected" ? (
                         <div>{error}</div>
                       ) : (
-                        <div className="dash-book-card">
+                        <div className="table-card">
                           <table className="table">
                             <thead className="table__header">
                               <tr>

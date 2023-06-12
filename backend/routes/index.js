@@ -4,6 +4,7 @@ const router = new Router();
 const authRoutes = require("./authRoutes");
 const bookRoutes = require("./bookRoutes");
 const borrowingRoutes = require("./borrowingRoutes");
+const userRoutes = require("./userRoutes");
 
 router.use((req, res, next) => {
   if (req.sessionID && req.session.user) {
@@ -16,5 +17,6 @@ router.use((req, res, next) => {
 router.use("/auth", authRoutes);
 router.use("/books", bookRoutes);
 router.use("/borrowings", borrowingRoutes);
+router.use("/users", userRoutes);
 
 module.exports = router;

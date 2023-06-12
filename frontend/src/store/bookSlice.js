@@ -167,7 +167,7 @@ export const searchBooks = createAsyncThunk(
 //   }
 // );
 
-const booksSlice = createSlice({
+const bookSlice = createSlice({
   name: "books",
   initialState: {
     books: [],
@@ -198,7 +198,9 @@ const booksSlice = createSlice({
       })
       .addCase(fetchBookById.fulfilled, (state, action) => {
         state.status = "resolved";
-        state.books = action.payload.booksInfo;
+        const booksArr = [];
+        booksArr.push(action.payload.booksInfo);
+        state.books = booksArr;
       })
       .addCase(fetchBookById.rejected, (state, action) => {
         state.status = "rejected";
@@ -356,6 +358,6 @@ const booksSlice = createSlice({
   },
 });
 
-export const {} = booksSlice.actions;
+export const {} = bookSlice.actions;
 
-export default booksSlice.reducer;
+export default bookSlice.reducer;

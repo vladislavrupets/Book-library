@@ -12,15 +12,14 @@ import Input from "../../custom-elements/input/Input";
 
 const Header = () => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
+  const { authInfo } = useSelector((state) => state.auth);
 
   const navigate = useNavigate();
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     try {
-      await dispatch(logout()).unwrap();
+      dispatch(logout());
       navigate("/login");
-      console.log(user);
     } catch (err) {
       console.error(err);
     }
@@ -42,7 +41,7 @@ const Header = () => {
       <div className="navi-bar__items-container">
         <Input visibility={true} placeholder="Search" />
       </div>
-      {user?.category === "guest" ? (
+      {authInfo?.category === "guest" ? (
         <div className="navi-bar__items-container">
           <div className="navi-bar__item" onClick={() => navigate("/login")}>
             Login
@@ -52,7 +51,7 @@ const Header = () => {
         <div className="navi-bar__items-container">
           <button
             className="link-button approve visible"
-            onClick={() => navigate("/borrowings-list")}
+            onClick={() => navigate(`/borrowings-list/${authInfo?.login}`)}
           >
             <CollectionsBookmarkOutlined />
             <span>My Borrowings</span>

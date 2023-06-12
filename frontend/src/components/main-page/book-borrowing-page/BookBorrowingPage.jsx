@@ -18,7 +18,7 @@ const BookBorrowingPage = () => {
 
   const dispatch = useDispatch();
   const { books, status, error } = useSelector((state) => state.book);
-  const { borrowings } = useSelector((state) => state.borrowing);
+  const { authInfo } = useSelector((state) => state.auth);
 
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -73,7 +73,7 @@ const BookBorrowingPage = () => {
           endDate,
         })
       );
-      navigate("/borrowings-list");
+      navigate(`/borrowings-list/${authInfo.login}`);
     } catch (err) {
       console.log(err);
     }
@@ -90,7 +90,7 @@ const BookBorrowingPage = () => {
         {status === "resolved" && (
           <div className="card">
             <div className="card__header">
-              <h3 className="card__header-title">{books.writing.title}</h3>
+              <h3 className="card__header-title">{books[0].writing.title}</h3>
             </div>
             <div className="card__body">
               <div className="card__body-container">
@@ -99,7 +99,7 @@ const BookBorrowingPage = () => {
                     <div
                       className="borrowing-book-card__cover"
                       style={{
-                        backgroundImage: `url(${books.cover_url})`,
+                        backgroundImage: `url(${books[0].cover_url})`,
                       }}
                     />
 
@@ -107,8 +107,8 @@ const BookBorrowingPage = () => {
                       <div className="borrowing-book-card__details-container">
                         <h3 className="borrowing-book-card__genre">Genres:</h3>
                         <span>
-                          {books.genres
-                            .map((genre) => genre?.genre_name)
+                          {books[0].genres
+                            .map((genre) => genre.genre_name)
                             .join(", ")}
                         </span>
                       </div>
@@ -117,8 +117,8 @@ const BookBorrowingPage = () => {
                           Authors:
                         </h3>
                         <span>
-                          {books.authors
-                            .map((author) => author?.full_name)
+                          {books[0].authors
+                            .map((author) => author.full_name)
                             .join(", ")}
                         </span>
                       </div>
@@ -126,19 +126,19 @@ const BookBorrowingPage = () => {
                         <h3 className="borrowing-book-card__title">
                           Publisher:
                         </h3>
-                        <span>{books.publisher.publisher_name}</span>
+                        <span>{books[0].publisher.publisher_name}</span>
                       </div>
                       <div className="borrowing-book-card__details-container">
                         <h3 className="borrowing-book-card__title">
                           Release year:
                         </h3>
-                        <span>{books.release_year}</span>
+                        <span>{books[0].release_year}</span>
                       </div>
                       <div className="borrowing-book-card__details-container">
                         <h3 className="borrowing-book-card__title">
                           Pages count:
                         </h3>
-                        <span>{books.pages_count}</span>
+                        <span>{books[0].pages_count}</span>
                       </div>
                     </div>
                   </div>

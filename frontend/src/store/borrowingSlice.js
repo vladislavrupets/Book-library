@@ -1,18 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Axios from "../utilities/axiosConfig";
 
-export const getBorrowings = createAsyncThunk(
-  "borrowings/getBorrowings",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await Axios.get("/borrowings");
-      return response.data;
-    } catch (err) {
-      return rejectWithValue(err.response.data);
-    }
-  }
-);
-
 export const createBorrowing = createAsyncThunk(
   "borrowings/createBorrowing",
   async ({ bookId, startDate, endDate }, { rejectWithValue }) => {
@@ -29,7 +17,7 @@ export const createBorrowing = createAsyncThunk(
   }
 );
 
-const borrowingsSlice = createSlice({
+const borrowingSlice = createSlice({
   name: "borrowings",
   initialState: {
     borrowings: [],
@@ -39,19 +27,6 @@ const borrowingsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getBorrowings.pending, (state) => {
-        state.status = "loading";
-        state.error = null;
-      })
-      .addCase(getBorrowings.fulfilled, (state, action) => {
-        state.status = "resolved";
-        state.borrowings = action.payload;
-      })
-      .addCase(getBorrowings.rejected, (state, action) => {
-        state.status = "rejected";
-        state.error = action.payload;
-      })
-
       .addCase(createBorrowing.pending, (state) => {
         state.status = "loading";
         state.error = null;
@@ -67,6 +42,6 @@ const borrowingsSlice = createSlice({
   },
 });
 
-export const {} = borrowingsSlice.actions;
+export const {} = borrowingSlice.actions;
 
-export default borrowingsSlice.reducer;
+export default borrowingSlice.reducer;

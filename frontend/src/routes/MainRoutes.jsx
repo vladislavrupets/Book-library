@@ -11,7 +11,7 @@ const MainRoutes = () => (
     <Route path="/" element={<MainBody />} />
     <Route path="/profile" element={<ProfilePage />} />
     <Route path="/book-borrowing/:bookId" element={<BookBorrowingPage />} />
-    <Route path="/borrowings-list" element={<BorrowingsListPage />} />
+    <Route path="/borrowings-list/:login" element={<BorrowingsListPage />} />
   </Routes>
 );
 
