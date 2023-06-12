@@ -10,6 +10,7 @@ class UserController {
         category
       );
       res.status(200).json({ borrowings });
+      console.log(borrowings);
     } catch (err) {
       if (err.code === 404) {
         res.status(404).json(err.message);

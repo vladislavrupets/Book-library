@@ -3,7 +3,7 @@ const router = new Router();
 
 const userController = require("../contollers/userController");
 
-router.post(
+router.get(
   "/get-borrowings-by-login/:login",
   userController.getUsersBorrowingsByLogin
 );

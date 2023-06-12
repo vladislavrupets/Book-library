@@ -1,8 +1,19 @@
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
+import { getUserBorrowingsbyLogin } from "../store/userSlice";
+
 const BorrowingsListPage = () => {
+  const { login } = useParams();
+
   const dispatch = useDispatch();
   const { usersBorrowings, status, error } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    dispatch(getUserBorrowingsbyLogin(login));
+  }, []);
+
   return (
     <div className="content-container">
       <div className="content-container__header">
@@ -22,131 +33,57 @@ const BorrowingsListPage = () => {
                         <tr>
                           <th className="table__header-item">
                             <div className="table__header-item--content">
-                              <span>Cover</span>
+                              Book
                             </div>
                           </th>
                           <th className="table__header-item">
                             <div className="table__header-item--content">
-                              Title
+                              Borrowing date
                             </div>
                           </th>
                           <th className="table__header-item">
                             <div className="table__header-item--content">
-                              Genres
+                              Return date
                             </div>
                           </th>
                           <th className="table__header-item">
                             <div className="table__header-item--content">
-                              Authors
-                            </div>
-                          </th>
-                          <th className="table__header-item">
-                            <div className="table__header-item--content">
-                              Publisher
-                            </div>
-                          </th>
-                          <th className="table__header-item">
-                            <div className="table__header-item--content">
-                              Release year
-                            </div>
-                          </th>
-                          <th className="table__header-item">
-                            <div className="table__header-item--content">
-                              Pages count
-                            </div>
-                          </th>
-                          <th className="table__header-item">
-                            <div className="table__header-item--content">
-                              Quantity
-                            </div>
-                          </th>
-                          <th className="table__header-item">
-                            <div className="table__header-item--content">
-                              Edit book
+                              Status
                             </div>
                           </th>
                         </tr>
                       </thead>
                       <tbody className="table__body">
-                        {books.map((book) => (
-                          <tr className="table__row" key={book.book_id}>
-                            <td className="table__row-item">
-                              <div
-                                className="book-cover"
-                                style={{
-                                  backgroundImage: `url(${book?.cover_url})`,
-                                }}
-                              ></div>
-                            </td>
+                        {usersBorrowings.map((borrowing) => (
+                          <tr
+                            className="table__row"
+                            key={borrowing.borrowing_id}
+                          >
                             <td className="table__row-item">
                               <div className="table__row-item--content">
                                 <div className="table__row-item--content-inner">
-                                  {book.writing.title}
-                                </div>
-                              </div>
-                            </td>
-                            <td className="table__row-item">
-                              <div className="table__row-item--content">
-                                {book?.genres?.map((genre) => (
-                                  <div className="table__row-item--content-inner">
-                                    <span key={genre.genre_id}>
-                                      {genre.genre_name}
-                                    </span>
-                                  </div>
-                                ))}
-                              </div>
-                            </td>
-                            <td className="table__row-item">
-                              <div className="table__row-item--content">
-                                {book.authors.map((author) => (
-                                  <div className="table__row-item--content-inner">
-                                    <span key={author.author_id}>
-                                      {author.full_name}
-                                    </span>
-                                  </div>
-                                ))}
-                              </div>
-                            </td>
-                            <td className="table__row-item">
-                              <div className="table__row-item--content">
-                                <div className="table__row-item--content-inner">
-                                  {book.publisher.publisher_name}
+                                  {borrowing.title}
                                 </div>
                               </div>
                             </td>
                             <td className="table__row-item">
                               <div className="table__row-item--content">
                                 <div className="table__row-item--content-inner">
-                                  {book.release_year}
+                                  {borrowing.start_date}
                                 </div>
                               </div>
                             </td>
                             <td className="table__row-item">
                               <div className="table__row-item--content">
                                 <div className="table__row-item--content-inner">
-                                  {book.pages_count}
+                                  {borrowing.end_date}
                                 </div>
                               </div>
                             </td>
                             <td className="table__row-item">
                               <div className="table__row-item--content">
                                 <div className="table__row-item--content-inner">
-                                  {book.quantity}
-                                </div>
-                              </div>
-                            </td>
-                            <td className="table__row-item">
-                              <div className="table__row-item--content">
-                                <div className="table__row-item--content-inner">
-                                  <button
-                                    className="main-button visible"
-                                    onClick={() =>
-                                      navigate("/dashboard/books/edit-book")
-                                    }
-                                  >
-                                    <Edit fontSize="small" />
-                                    <span>Edit</span>
-                                  </button>
+                                  {borrowing.status}
                                 </div>
                               </div>
                             </td>

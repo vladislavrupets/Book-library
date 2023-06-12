@@ -19,11 +19,16 @@ class bookBorrowingService {
   async getBorrowingsByLogin(login, category) {
     try {
       const borrowingData = await pgPool(category).query(
-        `select * from BookBorrowing bb
-        join User as u on u.user_id = bb.reader_num
-        where u.login = $1`,
+        `select bb.borrowing_id, w.title, bb.start_date, bb.end_date, bb.status, lu.login, lu.full_name
+          from BookBorrowing bb
+          join Users u on u.user_id = bb.reader_num
+          left join Users lu on lu.user_id = bb.librarian_num
+          join Book b on b.book_id = bb.book_num
+          join Writing w on w.writing_id = b.writing_num
+          where u.login = $1`,
         [login]
       );
+
       if (borrowingData.rows.length === 0) {
         throw { code: 404, message: "No borrowings found" };
       }
