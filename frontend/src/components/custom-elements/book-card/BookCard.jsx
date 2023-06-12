@@ -1,13 +1,17 @@
+import { useNavigate } from "react-router-dom";
+
 import "./bookCard.css";
 import { Add } from "@mui/icons-material";
 
-const BookCard = ({ title, author, genre, releaseYear, coverUrl }) => {
+const BookCard = ({ bookId, title, author, genre, releaseYear, coverUrl }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="book-card">
       <div
         className="book-card__cover"
         style={{ backgroundImage: `url(${coverUrl})` }}
-      ></div>
+      />
       <div className="book-card__details">
         <div className="book-card__details-container">
           <h3 className="book-card__title">
@@ -22,7 +26,10 @@ const BookCard = ({ title, author, genre, releaseYear, coverUrl }) => {
         </div>
       </div>
 
-      <button className="main-button visible">
+      <button
+        className="main-button visible"
+        onClick={() => navigate(`/book-borrowing/${bookId}`)}
+      >
         <Add />
         <h4>To borrow</h4>
       </button>

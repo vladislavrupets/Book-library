@@ -42,12 +42,13 @@ const MainBody = () => {
                   <div className="books-container">
                     {books.map((book) => (
                       <BookCard
+                        bookId={book.book_id}
                         title={book.writing.title}
                         author={book.authors[0].full_name}
                         genre={book.genres[0].genre_name}
                         releaseYear={book.release_year}
                         coverUrl={book.cover_url}
-                        key={book.id}
+                        key={book.book_id}
                       />
                     ))}
                   </div>

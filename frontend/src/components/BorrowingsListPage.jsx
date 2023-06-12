@@ -1,4 +1,4 @@
-const BookBorrowings = () => {
+const BorrowingsListPage = () => {
   return (
     <div className="content-container">
       <div className="content-container__header">
@@ -17,4 +17,4 @@ const BookBorrowings = () => {
   );
 };
 
-export default BookBorrowings;
+export default BorrowingsListPage;

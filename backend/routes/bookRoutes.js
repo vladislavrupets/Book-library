@@ -9,6 +9,7 @@ router.get(
   "/search-books/:offset/:itemsPerPage/:searchData?",
   bookController.searchBooks
 );
+router.get("/get-by-id/:bookId", bookController.getBookById);
 // router.get("/writing/get-all", bookController.getWritings);
 // router.get("/writing/search/:searchTerm", bookController.searchWritings);
 // router.get("/genre/get-all", bookController.getGenres);

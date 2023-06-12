@@ -19,6 +19,7 @@ class WritingService {
         "select * from Writing where writing_id = $1",
         [writing_id]
       );
+
       return writingData.rows[0];
     } catch (err) {
       console.error(err);

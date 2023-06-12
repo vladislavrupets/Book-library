@@ -77,7 +77,9 @@ const AddBook = () => {
   };
 
   useEffect(() => {
-    dispatch(searchBooks({ currentPage, itemsPerPage }));
+    dispatch(
+      searchBooks({ currentPage, itemsPerPage, searchData: inputSearchContent })
+    );
   }, [dispatch, currentPage, itemsPerPage]);
 
   const handlePageChange = (page) => {
@@ -122,6 +124,7 @@ const AddBook = () => {
 
   const handleChangeInput = (e) => {
     setIsCheckedField(false);
+    setInputError(false);
     setInputContent((prevContent) => {
       if (
         inputLabel === "Release year" ||
@@ -174,7 +177,7 @@ const AddBook = () => {
       case "Authors":
         setAuthors((prevAuthors) => {
           const updatedAuthors = [...prevAuthors];
-          if (inputContent.index !== undefined) {
+          if (inputContent.index) {
             updatedAuthors[inputContent.index] = {
               full_name: inputContent.value,
             };
@@ -212,6 +215,16 @@ const AddBook = () => {
 
   const handleClickSubmit = async () => {
     try {
+      console.log(
+        writing,
+        genres,
+        authors,
+        publisher,
+        releaseYear,
+        pagesCount,
+        quantity,
+        cover
+      );
       await dispatch(
         addBook({
           writing,
@@ -224,6 +237,7 @@ const AddBook = () => {
           coverUrl: cover,
         })
       ).unwrap();
+      setCover("");
       setWriting("");
       setGenres([]);
       setAuthors([]);
@@ -231,6 +245,8 @@ const AddBook = () => {
       setReleaseYear("");
       setPagesCount("");
       setQuantity("");
+      setInputSearchContent("");
+      dispatch(searchBooks({ currentPage, itemsPerPage, searchData: "" }));
     } catch (err) {
       console.error(err);
     }
@@ -693,16 +709,11 @@ const AddBook = () => {
                                     Pages count
                                   </div>
                                 </th>
-                                <th className="table__header-item">
-                                  <div className="table__header-item--content">
-                                    Quantity
-                                  </div>
-                                </th>
                               </tr>
                             </thead>
                             <tbody className="table__body">
                               {books?.map((book) => (
-                                <tr className="table__row" key={book.book_id}>
+                                <tr className="table__row" key={book?.book_id}>
                                   <td className="table__row-item">
                                     <div
                                       className="book-cover"
@@ -789,13 +800,6 @@ const AddBook = () => {
                                     <div className="table__row-item--content">
                                       <div className="table__row-item--content-inner">
                                         {book?.pages_count}
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td className="table__row-item">
-                                    <div className="table__row-item--content">
-                                      <div className="table__row-item--content-inner">
-                                        {book?.quantity}
                                       </div>
                                     </div>
                                   </td>

@@ -19,10 +19,10 @@ class WritingAuthorService {
       const writingAuthorData = await pgPool(category).query(
         `insert into WritingAuthor(writing_num, author_num)
             select $1, unnest($2::uuid[])
+            on conflict do nothing
         returning *`,
         [writing_id, authorsIds]
       );
-
       return writingAuthorData.rows[0];
     } catch (err) {
       console.error(err);

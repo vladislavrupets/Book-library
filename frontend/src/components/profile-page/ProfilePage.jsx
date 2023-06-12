@@ -23,6 +23,12 @@ const ProfilePage = () => {
                 <span>{authInfo.login}</span>
                 <h3>Phone number:</h3>
                 <span>{authInfo.phone_number}</span>
+                {authInfo.category === "reader" && (
+                  <>
+                    <h3>Trust raiting:</h3>
+                    <span>{authInfo.trust_raiting}</span>
+                  </>
+                )}
               </div>
             </div>
           </div>

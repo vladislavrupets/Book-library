@@ -32,7 +32,10 @@ const Header = () => {
         <div className="navi-bar__logo" onClick={() => navigate("/")}>
           Book Library
         </div>
-        <button className="link-button approve visible">
+        <button
+          className="link-button approve visible"
+          onClick={() => navigate("/")}
+        >
           <span>Library</span>
         </button>
       </div>
@@ -49,7 +52,7 @@ const Header = () => {
         <div className="navi-bar__items-container">
           <button
             className="link-button approve visible"
-            onClick={() => navigate("/borrowings")}
+            onClick={() => navigate("/borrowings-list")}
           >
             <CollectionsBookmarkOutlined />
             <span>My Borrowings</span>

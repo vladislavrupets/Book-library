@@ -1,4 +1,10 @@
 const pgPool = require("./dbConfig");
+const writingAuthorService = require("./writingAuthorService");
+const writingGenreService = require("./writingGenreService");
+const authorService = require("./authorService");
+const genreService = require("./genreService");
+const publisherService = require("./publisherService");
+const writingService = require("./writingService");
 
 const queryJsonBAgg = `
   jsonb_build_object(
@@ -179,29 +185,88 @@ class BookService {
 
   async createBook(book, category) {
     const {
-      writing_num,
-      publisher_num,
-      release_year,
-      pages_count,
+      writing,
+      genres,
+      authors,
+      publisher,
+      releaseYear,
+      pagesCount,
       quantity,
-      cover_url,
+      coverUrl,
     } = book;
 
     try {
+      await pgPool(category).query("begin");
+
+      let writingData = null;
+      if (writing.writing_id) {
+        writingData = await writingService.getWritingById(
+          writing.writing_id,
+          category
+        );
+      } else {
+        writingData = await writingService.createWriting(
+          writing.title,
+          category
+        );
+      }
+      const writingId = writingData.writing_id;
+
+      await genreService.createGenre(genres, category);
+      const genresData = await genreService.getGenresIdByName(genres, category);
+      const genresIds = genresData.map((genredata) => genredata.genre_id);
+
+      const authorsNames = authors
+        .filter((author) => !author.author_id)
+        .map((author) => author.full_name);
+      let authorsData = [];
+      if (authorsNames.length > 0) {
+        authorsData = await authorService.createAuthor(authorsNames, category);
+      }
+
+      const authorsIds = [
+        ...authors
+          .filter((author) => author.author_id)
+          .map((author) => author.author_id),
+        ...authorsData
+          .filter((authordata) => authordata.author_id)
+          .map((authordata) => authordata.author_id),
+      ];
+
+      let publisherData = null;
+      publisherData = await publisherService.createPublisher(
+        publisher,
+        category
+      );
+      if (!publisherData) {
+        publisherData = await publisherService.getPublisherIdByName(
+          publisher,
+          category
+        );
+      }
+      const publisherId = publisherData.publisher_id;
+
+      await writingGenreService.createWritingGenre(
+        writingId,
+        genresIds,
+        category
+      );
+
+      await writingAuthorService.createWritingAuthor(
+        writingId,
+        authorsIds,
+        category
+      );
+
       await pgPool(category).query(
         `insert into Book
             (writing_num, release_year, publisher_num, pages_count, quantity, cover_url)
             values ($1, $2, $3, $4, $5, $6)`,
-        [
-          writing_num,
-          release_year,
-          publisher_num,
-          pages_count,
-          quantity,
-          cover_url,
-        ]
+        [writingId, releaseYear, publisherId, pagesCount, quantity, coverUrl]
       );
+      await pgPool(category).query("commit");
     } catch (err) {
+      await pgPool(category).query("rollback");
       console.error(err);
       throw { code: 500 };
     }
@@ -212,12 +277,39 @@ class BookService {
       const countData = await pgPool(category).query(
         "select count(*) from Book"
       );
-
       const totalCount = countData.rows[0].count;
+
       return totalCount;
     } catch (err) {
       console.error(err);
       throw { code: 500 };
+    }
+  }
+
+  async getBookById(bookId, category) {
+    try {
+      const bookData = await pgPool(category).query(
+        `select b.book_id, ${queryJsonBAgg}, b.release_year, b.pages_count, b.quantity, b.cover_url
+        from Book b
+          join Publisher p on p.publisher_id = b.publisher_num
+          join Writing wr on wr.writing_id = b.writing_num
+        where b.book_id = $1
+        group by
+          b.book_id, wr.title, wr.writing_id, p.publisher_name, p.publisher_id,
+          b.release_year, b.pages_count, b.quantity, b.cover_url`,
+        [bookId]
+      );
+      if (bookData.rowCount === 0) {
+        throw { code: 404, message: "No book found" };
+      }
+      return bookData.rows[0];
+    } catch (err) {
+      if (err.code === 404) {
+        throw err;
+      } else {
+        console.error(err);
+        throw { code: 500 };
+      }
     }
   }
 

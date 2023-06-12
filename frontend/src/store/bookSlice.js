@@ -9,7 +9,19 @@ export const fetchBooks = createAsyncThunk(
       const res = await Axios.get(`/books/get-all/${offset}/${itemsPerPage}`);
       return res.data;
     } catch (err) {
-      console.log(err);
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const fetchBookById = createAsyncThunk(
+  "books/fetchBookById",
+  async (bookId, { rejectWithValue }) => {
+    try {
+      const res = await Axios.get(`/books/get-by-id/${bookId}`);
+      console.log(res.data);
+      return res.data;
+    } catch (err) {
       return rejectWithValue(err.response.data);
     }
   }
@@ -180,6 +192,19 @@ const booksSlice = createSlice({
         state.error = action.payload.books;
       })
 
+      .addCase(fetchBookById.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(fetchBookById.fulfilled, (state, action) => {
+        state.status = "resolved";
+        state.books = action.payload.booksInfo;
+      })
+      .addCase(fetchBookById.rejected, (state, action) => {
+        state.status = "rejected";
+        state.error = action.payload;
+      })
+
       .addCase(addBook.pending, (state) => {
         state.status = "loading";
         state.error = null;
@@ -190,7 +215,7 @@ const booksSlice = createSlice({
       })
       .addCase(addBook.rejected, (state, action) => {
         state.status = "rejected";
-        state.error = action.payload.error;
+        state.error = action.payload;
       })
 
       .addCase(editBook.pending, (state) => {
