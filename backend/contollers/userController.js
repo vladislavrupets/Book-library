@@ -9,13 +9,15 @@ class UserController {
         login,
         category
       );
-      res.status(200).json({ borrowings });
-      console.log(borrowings);
+
+      const borrowingsCount =
+        await bookBorrowingService.getBorrowingsCountByLogin(login, category);
+      res.status(200).json({ borrowings, borrowingsCount });
     } catch (err) {
       if (err.code === 404) {
         res.status(404).json(err.message);
       } else {
-        res.status(500).send();
+        res.status(500).json("Internal server error");
       }
     }
   }

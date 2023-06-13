@@ -10,7 +10,7 @@ import {
   DeleteOutline,
 } from "@mui/icons-material";
 
-import "./bookStyles.css";
+import "./dashBook.css";
 import { addBook, searchBooks } from "../../../store/bookSlice";
 import Input from "../../custom-elements/input/Input";
 import Pagination from "../../custom-elements/pagination/Pagination";

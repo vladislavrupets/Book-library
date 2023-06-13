@@ -17,10 +17,49 @@ export const createBorrowing = createAsyncThunk(
   }
 );
 
+export const approveBorrowing = createAsyncThunk(
+  "borrowings/approveBorrowing",
+  async ({ borrowingId }, { rejectWithValue }) => {
+    try {
+      const response = await Axios.post("/borrowings/approve-borrowing", {
+        borrowingId,
+      });
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const getBorrowingRequests = createAsyncThunk(
+  "borrowings/getBorrowingRequests",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await Axios.get("/borrowings/get-borrowing-requests");
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const getActiveBorrowings = createAsyncThunk(
+  "borrowings/getActiveBorrowings",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await Axios.get("/borrowings/get-active-borrowings");
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 const borrowingSlice = createSlice({
   name: "borrowings",
   initialState: {
     borrowings: [],
+    borrowingsCount: 0,
     status: null,
     error: null,
   },
@@ -36,6 +75,34 @@ const borrowingSlice = createSlice({
         state.borrowings.push(action.payload);
       })
       .addCase(createBorrowing.rejected, (state, action) => {
+        state.status = "rejected";
+        state.error = action.payload;
+      })
+
+      .addCase(getBorrowingRequests.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(getBorrowingRequests.fulfilled, (state, action) => {
+        state.status = "resolved";
+        state.borrowings = action.payload.borrowings;
+        state.borrowingsCount = action.payload.borrowingsCount;
+      })
+      .addCase(getBorrowingRequests.rejected, (state, action) => {
+        state.status = "rejected";
+        state.error = action.payload;
+      })
+
+      .addCase(getActiveBorrowings.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(getActiveBorrowings.fulfilled, (state, action) => {
+        state.status = "resolved";
+        state.borrowings = action.payload.borrowings;
+        state.borrowingsCount = action.payload.borrowingsCount;
+      })
+      .addCase(getActiveBorrowings.rejected, (state, action) => {
         state.status = "rejected";
         state.error = action.payload;
       });

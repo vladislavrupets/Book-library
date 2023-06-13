@@ -18,6 +18,7 @@ const userSlice = createSlice({
   initialState: {
     users: [],
     usersBorrowings: [],
+    borrowingsCount: 0,
     status: null,
     error: null,
   },
@@ -31,6 +32,7 @@ const userSlice = createSlice({
       .addCase(getUserBorrowingsbyLogin.fulfilled, (state, action) => {
         state.status = "resolved";
         state.usersBorrowings = action.payload.borrowings;
+        state.borrowingsCount = action.payload.borrowingsCount;
       })
       .addCase(getUserBorrowingsbyLogin.rejected, (state, action) => {
         state.status = "rejected";

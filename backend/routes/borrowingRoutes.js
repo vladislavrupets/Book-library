@@ -4,5 +4,8 @@ const router = new Router();
 const borrowingController = require("../contollers/borrowingController");
 
 router.post("/create", borrowingController.createBorrowing);
+router.get("/get-borrowing-requests", borrowingController.getBorrowingRequests);
+router.get("/get-active-borrowings", borrowingController.getActiveBorrowings);
+router.post("/approve-borrowing", borrowingController.approveBorrowing);
 
 module.exports = router;

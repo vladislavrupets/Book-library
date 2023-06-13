@@ -1,18 +1,30 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { getUserBorrowingsbyLogin } from "../store/userSlice";
 
+import Pagination from "./custom-elements/pagination/Pagination";
+
+const itemsPerPage = 10;
+
 const BorrowingsListPage = () => {
   const { login } = useParams();
 
   const dispatch = useDispatch();
-  const { usersBorrowings, status, error } = useSelector((state) => state.user);
+  const { usersBorrowings, borrowingsCount, status, error } = useSelector(
+    (state) => state.user
+  );
+
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     dispatch(getUserBorrowingsbyLogin(login));
   }, []);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   return (
     <div className="content-container">
@@ -185,6 +197,13 @@ const BorrowingsListPage = () => {
                       </tbody>
                     </table>
                   </div>
+                </div>
+                <div className="card__body-container--item">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={Math.ceil(borrowingsCount / itemsPerPage)}
+                    onPageChange={handlePageChange}
+                  />
                 </div>
               </div>
             )}

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Add, SearchOutlined, Edit } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 
-import "./bookStyles.css";
+import "./dashBook.css";
 import { searchBooks } from "../../../store/bookSlice";
 import Input from "../../custom-elements/input/Input";
 import Pagination from "../../custom-elements/pagination/Pagination";

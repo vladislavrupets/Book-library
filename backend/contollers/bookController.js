@@ -24,7 +24,7 @@ class BookController {
       if (err.code === 404) {
         res.status(404).json(err.message);
       } else {
-        res.status(500).send();
+        res.status(500).json("Internal server error");
       }
     }
   }
@@ -39,7 +39,7 @@ class BookController {
       if (err.code === 400) {
         res.status(400).json(err.message);
       } else {
-        res.status(500).send();
+        res.status(500).json("Internal server error");
       }
     }
   }
@@ -53,7 +53,7 @@ class BookController {
       if (err.code === 404) {
         res.status(404).json(err.message);
       } else {
-        res.status(500).send();
+        res.status(500).json("Internal server error");
       }
     }
   }
@@ -76,7 +76,7 @@ class BookController {
       if (err.code === 404) {
         res.status(404).json(err.message);
       } else {
-        res.status(500).send();
+        res.status(500).json("Internal server error");
       }
     }
   }

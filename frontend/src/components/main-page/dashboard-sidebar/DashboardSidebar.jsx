@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate, NavLink } from "react-router-dom";
 
 import "./dashboardSidebar.css";
 import DropdownSelect from "../../custom-elements/dropdown-select/DropdownSelect";
@@ -33,20 +32,28 @@ const dropdownOptions = {
       title: "Add new user",
       link: "/dashboard/users/add-user",
     },
+  ],
+  borrowingsOptions: [
     {
       title: "Borrowing requests",
-      link: "/dashboard/users/borrowings",
+      link: "/dashboard/borrowings/borrowing-requests",
+    },
+    {
+      title: "Active borrowings",
+      link: "/dashboard/borrowings/active-borrowings",
     },
   ],
 };
 
 const DashboardSidebar = () => {
-  const navigate = useNavigate();
-
   return (
     <div className="dash-sidebar">
       <DropdownSelect title={"Books"} options={dropdownOptions.booksOptions} />
       <DropdownSelect title={"Users"} options={dropdownOptions.usersOptions} />
+      <DropdownSelect
+        title={"Borrowings"}
+        options={dropdownOptions.borrowingsOptions}
+      />
     </div>
   );
 };
