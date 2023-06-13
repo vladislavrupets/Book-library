@@ -26,7 +26,7 @@ const ProfilePage = () => {
                 {authInfo.category === "reader" && (
                   <>
                     <h3>Trust raiting:</h3>
-                    <span>{authInfo.trust_raiting}</span>
+                    <span>{authInfo.trust_rating}</span>
                   </>
                 )}
               </div>

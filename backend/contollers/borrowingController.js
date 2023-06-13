@@ -42,10 +42,19 @@ class BorrowingController {
 
   async getActiveBorrowings(req, res) {
     try {
-      const { category } = req.body;
-      const borrowings = await bookBorrowingService.getActiveBorrowings(
-        category
-      );
+      const { category, user_id } = req.body;
+
+      let borrowings = null;
+      if (category === "administrator") {
+        borrowings = await bookBorrowingService.getAllActiveBorrowings(
+          category
+        );
+      } else {
+        borrowings = await bookBorrowingService.getActiveBorrowings(
+          user_id,
+          category
+        );
+      }
 
       const borrowingsCount =
         await bookBorrowingService.getActiveBorrowingsCount(category);
@@ -61,8 +70,30 @@ class BorrowingController {
 
   async approveBorrowing(req, res) {
     try {
-      const { borrowingId } = req.params;
-      await bookBorrowingService.updateBorrowingStatusToActive(borrowingId);
+      const { borrowingId, category, user_id } = req.body;
+      await bookBorrowingService.updateBorrowingStatusToActive(
+        borrowingId,
+        user_id,
+        category
+      );
+      res.status(200).send();
+    } catch (err) {
+      if (err.code === 400) {
+        res.status(400).json(err.message);
+      } else {
+        res.status(500).json("Internal server error");
+      }
+    }
+  }
+
+  async approveReturn(req, res) {
+    try {
+      const { borrowingId, actualEndDate, category } = req.body;
+      await bookBorrowingService.updateBorrowingStatusToReturned(
+        borrowingId,
+        actualEndDate,
+        category
+      );
       res.status(200).send();
     } catch (err) {
       if (err.code === 400) {

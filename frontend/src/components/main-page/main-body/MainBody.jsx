@@ -40,17 +40,20 @@ const MainBody = () => {
               ) : (
                 <div className="card__body-container--item">
                   <div className="books-container">
-                    {books.map((book) => (
-                      <BookCard
-                        bookId={book.book_id}
-                        title={book.writing.title}
-                        author={book.authors[0].full_name}
-                        genre={book.genres[0].genre_name}
-                        releaseYear={book.release_year}
-                        coverUrl={book.cover_url}
-                        key={book.book_id}
-                      />
-                    ))}
+                    {books.map(
+                      (book) =>
+                        book.quantity > 0 && (
+                          <BookCard
+                            bookId={book.book_id}
+                            title={book.writing.title}
+                            author={book.authors[0].full_name}
+                            genre={book.genres[0].genre_name}
+                            releaseYear={book.release_year}
+                            coverUrl={book.cover_url}
+                            key={book.book_id}
+                          />
+                        )
+                    )}
                   </div>
                 </div>
               )}

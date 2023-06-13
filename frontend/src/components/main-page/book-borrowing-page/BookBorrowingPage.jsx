@@ -142,55 +142,57 @@ const BookBorrowingPage = () => {
                       </div>
                     </div>
                   </div>
-                  <form
-                    className="form-container"
-                    onSubmit={(e) => handleClickSubmit(e)}
-                  >
-                    <div className="form-group">
-                      <label>Borrowing date:</label>
-                      <input
-                        className="date-selector"
-                        type="date"
-                        min={today}
-                        max={maxDate}
-                        value={startDate}
-                        onChange={handleBorrowingDateChange}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>Days for borrowing:</label>
-                      <div className="input-group">
+                  <div className="card__body-container--item">
+                    <form
+                      className="form-container"
+                      onSubmit={(e) => handleClickSubmit(e)}
+                    >
+                      <div className="form-group">
+                        <label>Borrowing date:</label>
                         <input
-                          className="borrowing-input"
-                          type="number"
-                          min={1}
-                          max={30}
-                          value={daysForBorrowing}
-                          onChange={handleDaysChange}
+                          className="date-selector"
+                          type="date"
+                          min={today}
+                          max={maxDate}
+                          value={startDate}
+                          onChange={handleBorrowingDateChange}
                         />
                       </div>
-                    </div>
-                    <div className="form-group">
-                      <label>Return date:</label>
-                      <input
-                        className="date-selector"
-                        type="date"
-                        min={startDate}
-                        max={
-                          new Date(startDate).getTime() +
-                          30 * 24 * 60 * 60 * 1000
-                        }
-                        value={endDate}
-                        onChange={(event) => setEndDate(event.target.value)}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <button className="main-button visible">
-                        <Check />
-                        <h4>Submit</h4>
-                      </button>
-                    </div>
-                  </form>
+                      <div className="form-group">
+                        <label>Days for borrowing:</label>
+                        <div className="input-group">
+                          <input
+                            className="borrowing-input"
+                            type="number"
+                            min={1}
+                            max={30}
+                            value={daysForBorrowing}
+                            onChange={handleDaysChange}
+                          />
+                        </div>
+                      </div>
+                      <div className="form-group">
+                        <label>Return date:</label>
+                        <input
+                          className="date-selector"
+                          type="date"
+                          min={startDate}
+                          max={
+                            new Date(startDate).getTime() +
+                            30 * 24 * 60 * 60 * 1000
+                          }
+                          value={endDate}
+                          onChange={(event) => setEndDate(event.target.value)}
+                        />
+                      </div>
+                      <div className="form-group">
+                        <button className="main-button visible">
+                          <Check />
+                          <h4>Submit</h4>
+                        </button>
+                      </div>
+                    </form>
+                  </div>
                 </div>
               </div>
             </div>

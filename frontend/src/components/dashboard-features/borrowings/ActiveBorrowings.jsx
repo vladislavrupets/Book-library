@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Check } from "@mui/icons-material";
 
-import { getActiveBorrowings } from "../../../store/borrowingSlice";
+import {
+  getActiveBorrowings,
+  approveReturn,
+} from "../../../store/borrowingSlice";
 
 import Pagination from "../../custom-elements/pagination/Pagination";
 
@@ -23,20 +27,33 @@ const ActiveBorrowings = () => {
     setCurrentPage(page);
   };
 
+  const handleClickApprove = (borrowingId) => {
+    const actualEndDate = new Date().toISOString().split("T")[0];
+    try {
+      dispatch(approveReturn({ borrowingId, actualEndDate })).unwrap();
+      dispatch(getActiveBorrowings());
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className="content-container">
       <div className="content-container__header">
-        <h2 className="content-container__header-title">Active Borrowings</h2>
+        <h2 className="content-container__header-title">Borrowings</h2>
       </div>
       <div className="content-container__item">
         <div className="card">
+          <div className="card__header">
+            <h3 className="card__header-title">Active Borrovings</h3>
+          </div>
           <div className="card__body">
             {status === "loading" && <div>Loading...</div>}
             {status === "rejected" && <div>{error}</div>}
             {status === "resolved" && (
               <div className="card__body-container">
                 <div className="card__body-container--item">
-                  <div className="dash-book-card">
+                  <div className="table-card">
                     <table className="table">
                       <thead className="table__header">
                         <tr>
@@ -62,7 +79,17 @@ const ActiveBorrowings = () => {
                           </th>
                           <th className="table__header-item">
                             <div className="table__header-item--content">
-                              Librarian
+                              Librarian login
+                            </div>
+                          </th>
+                          <th className="table__header-item">
+                            <div className="table__header-item--content">
+                              Librarian name
+                            </div>
+                          </th>
+                          <th className="table__header-item">
+                            <div className="table__header-item--content">
+                              Approve book return
                             </div>
                           </th>
                         </tr>
@@ -109,6 +136,28 @@ const ActiveBorrowings = () => {
                               <div className="table__row-item--content">
                                 <div className="table__row-item--content-inner">
                                   {borrowing.librarian_login}
+                                </div>
+                              </div>
+                            </td>
+                            <td className="table__row-item">
+                              <div className="table__row-item--content">
+                                <div className="table__row-item--content-inner">
+                                  {borrowing.librarian_name}
+                                </div>
+                              </div>
+                            </td>
+                            <td className="table__row-item">
+                              <div className="table__row-item--content">
+                                <div className="table__row-item--content-inner">
+                                  <button
+                                    className="main-button visible"
+                                    onClick={() =>
+                                      handleClickApprove(borrowing.borrowing_id)
+                                    }
+                                  >
+                                    <Check fontSize="small" />
+                                    <span>Approve</span>
+                                  </button>
                                 </div>
                               </div>
                             </td>

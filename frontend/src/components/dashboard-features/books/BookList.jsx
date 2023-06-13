@@ -210,7 +210,9 @@ const BookList = () => {
                                       <button
                                         className="main-button visible"
                                         onClick={() =>
-                                          navigate("/dashboard/books/edit-book")
+                                          navigate(
+                                            `/dashboard/books/edit-book/${book.book_id}`
+                                          )
                                         }
                                       >
                                         <Edit fontSize="small" />

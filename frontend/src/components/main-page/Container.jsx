@@ -32,7 +32,8 @@ const Container = () => {
           <NaviBar />
         </header>
         <div className="inner-container">
-          {authInfo?.category === "administrator" && "librarian" ? (
+          {authInfo?.category === "administrator" ||
+          authInfo?.category === "librarian" ? (
             <aside className="inner-container__aside">
               <DashboardSidebar />
             </aside>
@@ -40,7 +41,8 @@ const Container = () => {
 
           <main
             className={
-              authInfo?.category === "administrator" && "librarian"
+              authInfo?.category === "administrator" ||
+              authInfo?.category === "librarian"
                 ? "inner-container__content with-aside"
                 : "inner-container__content"
             }

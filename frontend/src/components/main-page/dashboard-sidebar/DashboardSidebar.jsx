@@ -10,10 +10,6 @@ const dropdownOptions = {
       link: "/dashboard/books/book-list",
     },
     {
-      title: "Edit book",
-      link: "/dashboard/books/edit-book",
-    },
-    {
       title: "Add book",
       link: "/dashboard/books/add-book",
     },

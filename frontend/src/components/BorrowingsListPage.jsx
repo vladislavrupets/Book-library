@@ -43,79 +43,81 @@ const BorrowingsListPage = () => {
                 </div>
                 <div className="card__body-container--item">
                   <div className="dash-book-card">
-                    <table className="table">
-                      <thead className="table__header">
-                        <tr>
-                          <th className="table__header-item">
-                            <div className="table__header-item--content">
-                              Book
-                            </div>
-                          </th>
-                          <th className="table__header-item">
-                            <div className="table__header-item--content">
-                              Borrowing date
-                            </div>
-                          </th>
-                          <th className="table__header-item">
-                            <div className="table__header-item--content">
-                              Return date
-                            </div>
-                          </th>
-                          <th className="table__header-item">
-                            <div className="table__header-item--content">
-                              Status
-                            </div>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="table__body">
-                        {usersBorrowings
-                          .filter(
-                            (borrowing) =>
-                              borrowing.status === "pending" ||
-                              borrowing.status === "active"
-                          )
-                          .map((borrowing) => (
-                            <tr
-                              className="table__row"
-                              key={borrowing.borrowing_id}
-                            >
-                              <td className="table__row-item">
-                                <div className="table__row-item--content">
-                                  <div className="table__row-item--content-inner">
-                                    {borrowing.title}
+                    <div className="table-card">
+                      <table className="table">
+                        <thead className="table__header">
+                          <tr>
+                            <th className="table__header-item">
+                              <div className="table__header-item--content">
+                                Book
+                              </div>
+                            </th>
+                            <th className="table__header-item">
+                              <div className="table__header-item--content">
+                                Borrowing date
+                              </div>
+                            </th>
+                            <th className="table__header-item">
+                              <div className="table__header-item--content">
+                                Return date
+                              </div>
+                            </th>
+                            <th className="table__header-item">
+                              <div className="table__header-item--content">
+                                Status
+                              </div>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="table__body">
+                          {usersBorrowings
+                            .filter(
+                              (borrowing) =>
+                                borrowing.status === "pending" ||
+                                borrowing.status === "active"
+                            )
+                            .map((borrowing) => (
+                              <tr
+                                className="table__row"
+                                key={borrowing.borrowing_id}
+                              >
+                                <td className="table__row-item">
+                                  <div className="table__row-item--content">
+                                    <div className="table__row-item--content-inner">
+                                      {borrowing.title}
+                                    </div>
                                   </div>
-                                </div>
-                              </td>
-                              <td className="table__row-item">
-                                <div className="table__row-item--content">
-                                  <div className="table__row-item--content-inner">
-                                    {new Date(
-                                      borrowing.start_date
-                                    ).toLocaleDateString()}
+                                </td>
+                                <td className="table__row-item">
+                                  <div className="table__row-item--content">
+                                    <div className="table__row-item--content-inner">
+                                      {new Date(
+                                        borrowing.start_date
+                                      ).toLocaleDateString()}
+                                    </div>
                                   </div>
-                                </div>
-                              </td>
-                              <td className="table__row-item">
-                                <div className="table__row-item--content">
-                                  <div className="table__row-item--content-inner">
-                                    {new Date(
-                                      borrowing.end_date
-                                    ).toLocaleDateString()}
+                                </td>
+                                <td className="table__row-item">
+                                  <div className="table__row-item--content">
+                                    <div className="table__row-item--content-inner">
+                                      {new Date(
+                                        borrowing.end_date
+                                      ).toLocaleDateString()}
+                                    </div>
                                   </div>
-                                </div>
-                              </td>
-                              <td className="table__row-item">
-                                <div className="table__row-item--content">
-                                  <div className="table__row-item--content-inner">
-                                    {borrowing.status}
+                                </td>
+                                <td className="table__row-item">
+                                  <div className="table__row-item--content">
+                                    <div className="table__row-item--content-inner">
+                                      {borrowing.status}
+                                    </div>
                                   </div>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </table>
+                                </td>
+                              </tr>
+                            ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
                 <div className="card__header">
@@ -123,79 +125,81 @@ const BorrowingsListPage = () => {
                 </div>
                 <div className="card__body-container--item">
                   <div className="dash-book-card">
-                    <table className="table">
-                      <thead className="table__header">
-                        <tr>
-                          <th className="table__header-item">
-                            <div className="table__header-item--content">
-                              Book
-                            </div>
-                          </th>
-                          <th className="table__header-item">
-                            <div className="table__header-item--content">
-                              Borrowing date
-                            </div>
-                          </th>
-                          <th className="table__header-item">
-                            <div className="table__header-item--content">
-                              Return date
-                            </div>
-                          </th>
-                          <th className="table__header-item">
-                            <div className="table__header-item--content">
-                              Status
-                            </div>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="table__body">
-                        {usersBorrowings
-                          .filter(
-                            (borrowing) =>
-                              borrowing.status !== "pending" &&
-                              borrowing.status !== "active"
-                          )
-                          .map((borrowing) => (
-                            <tr
-                              className="table__row"
-                              key={borrowing.borrowing_id}
-                            >
-                              <td className="table__row-item">
-                                <div className="table__row-item--content">
-                                  <div className="table__row-item--content-inner">
-                                    {borrowing.title}
+                    <div className="table-card">
+                      <table className="table">
+                        <thead className="table__header">
+                          <tr>
+                            <th className="table__header-item">
+                              <div className="table__header-item--content">
+                                Book
+                              </div>
+                            </th>
+                            <th className="table__header-item">
+                              <div className="table__header-item--content">
+                                Borrowing date
+                              </div>
+                            </th>
+                            <th className="table__header-item">
+                              <div className="table__header-item--content">
+                                Return date
+                              </div>
+                            </th>
+                            <th className="table__header-item">
+                              <div className="table__header-item--content">
+                                Status
+                              </div>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="table__body">
+                          {usersBorrowings
+                            .filter(
+                              (borrowing) =>
+                                borrowing.status !== "pending" &&
+                                borrowing.status !== "active"
+                            )
+                            .map((borrowing) => (
+                              <tr
+                                className="table__row"
+                                key={borrowing.borrowing_id}
+                              >
+                                <td className="table__row-item">
+                                  <div className="table__row-item--content">
+                                    <div className="table__row-item--content-inner">
+                                      {borrowing.title}
+                                    </div>
                                   </div>
-                                </div>
-                              </td>
-                              <td className="table__row-item">
-                                <div className="table__row-item--content">
-                                  <div className="table__row-item--content-inner">
-                                    {new Date(
-                                      borrowing.start_date
-                                    ).toLocaleDateString()}
+                                </td>
+                                <td className="table__row-item">
+                                  <div className="table__row-item--content">
+                                    <div className="table__row-item--content-inner">
+                                      {new Date(
+                                        borrowing.start_date
+                                      ).toLocaleDateString()}
+                                    </div>
                                   </div>
-                                </div>
-                              </td>
-                              <td className="table__row-item">
-                                <div className="table__row-item--content">
-                                  <div className="table__row-item--content-inner">
-                                    {new Date(
-                                      borrowing.end_date
-                                    ).toLocaleDateString()}
+                                </td>
+                                <td className="table__row-item">
+                                  <div className="table__row-item--content">
+                                    <div className="table__row-item--content-inner">
+                                      {new Date(
+                                        borrowing.end_date
+                                      ).toLocaleDateString()}
+                                    </div>
                                   </div>
-                                </div>
-                              </td>
-                              <td className="table__row-item">
-                                <div className="table__row-item--content">
-                                  <div className="table__row-item--content-inner">
-                                    {borrowing.status}
+                                </td>
+                                <td className="table__row-item">
+                                  <div className="table__row-item--content">
+                                    <div className="table__row-item--content-inner">
+                                      {borrowing.status}
+                                    </div>
                                   </div>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </table>
+                                </td>
+                              </tr>
+                            ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
                 <div className="card__body-container--item">

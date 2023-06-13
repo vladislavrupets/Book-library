@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Add } from "@mui/icons-material";
+import { Check } from "@mui/icons-material";
 
-import { getBorrowingRequests } from "../../../store/borrowingSlice";
+import {
+  getBorrowingRequests,
+  approveBorrowing,
+} from "../../../store/borrowingSlice";
 
 import Pagination from "../../custom-elements/pagination/Pagination";
 
@@ -24,13 +27,30 @@ const BorrowingRequests = () => {
     setCurrentPage(page);
   };
 
+  const handleClickAccept = (borrowingId) => {
+    try {
+      dispatch(approveBorrowing(borrowingId)).unwrap();
+    } catch (err) {
+      console.error(err);
+    }
+    dispatch(getBorrowingRequests());
+  };
+
+  const checkStartDate = (startDate) => {
+    const today = new Date().toISOString().split("T")[0];
+    return startDate < today;
+  };
+
   return (
     <div className="content-container">
       <div className="content-container__header">
-        <h2 className="content-container__header-title">Borrowing Requests</h2>
+        <h2 className="content-container__header-title">Borrowings</h2>
       </div>
       <div className="content-container__item">
         <div className="card">
+          <div className="card__header">
+            <h3 className="card__header-title">Borrowing Requests</h3>
+          </div>
           <div className="card__body">
             {status === "loading" && <div>Loading...</div>}
             {status === "rejected" && <div>{error}</div>}
@@ -109,10 +129,21 @@ const BorrowingRequests = () => {
                             <td className="table__row-item">
                               <div className="table__row-item--content">
                                 <div className="table__row-item--content-inner">
-                                  <button className="main-button visible">
-                                    <Add fontSize="small" />
-                                    <span>Accept</span>
-                                  </button>
+                                  {checkStartDate(borrowing.start_date) ? (
+                                    <button
+                                      className="main-button visible"
+                                      onClick={() =>
+                                        handleClickAccept(
+                                          borrowing.borrowing_id
+                                        )
+                                      }
+                                    >
+                                      <Check fontSize="small" />
+                                      <span>Accept</span>
+                                    </button>
+                                  ) : (
+                                    <span>Waiting</span>
+                                  )}
                                 </div>
                               </div>
                             </td>
