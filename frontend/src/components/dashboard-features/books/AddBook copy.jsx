@@ -256,7 +256,7 @@ const AddBook = () => {
             <div className="card__body-container">
               <div className="card__body-container--item">
                 <div className="table-card">
-                  <table className="books_table">
+                  <table cclassName="books_table">
                     <thead className="table__header">
                       <tr>
                         <th className="table__header-item">

@@ -19,7 +19,6 @@ export const fetchBookById = createAsyncThunk(
   async (bookId, { rejectWithValue }) => {
     try {
       const res = await Axios.get(`/books/get-by-id/${bookId}`);
-      console.log(res.data);
       return res.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -213,7 +212,7 @@ const bookSlice = createSlice({
       })
       .addCase(addBook.fulfilled, (state, action) => {
         state.status = "resolved";
-        state.books.push(action.payload.booksInfo);
+        state.books.push(...action.payload.booksInfo);
       })
       .addCase(addBook.rejected, (state, action) => {
         state.status = "rejected";

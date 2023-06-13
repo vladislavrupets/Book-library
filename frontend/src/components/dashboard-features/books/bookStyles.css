@@ -18,6 +18,16 @@
   flex-direction: column;
 }
 
+.books_table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.books_table th:first-child,
+.books_table td:first-child {
+  width: 75px;
+}
+
 /* Add book */
 .add-book-cover {
   transition: background-color 0.2s, transform 0.2s;

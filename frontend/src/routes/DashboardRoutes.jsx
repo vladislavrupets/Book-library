@@ -11,7 +11,6 @@ const DashboardRoutes = () => (
     <Route path="/dashboard/books/book-list" element={<BookList />} />
     <Route path="/dashboard/books/edit-book" element={<EditBook />} />
     <Route path="/dashboard/books/add-book" element={<AddBook />} />
-
     <Route path="/dashboard/users/add-user" element={<AddUser />} />
   </Routes>
 );

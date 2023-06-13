@@ -5,7 +5,7 @@ const pgPool = require("./postgre-services/dbConfig");
 
 module.exports = session({
   store: new pgSession({
-    pool: pgPool("postgres"),
+    pool: pgPool("connect_user"),
     tableName: "session",
   }),
   secret: process.env.COOKIE_SECRET,

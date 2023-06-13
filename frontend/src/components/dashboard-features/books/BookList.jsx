@@ -86,7 +86,7 @@ const BookList = () => {
                       <div>{error}</div>
                     ) : (
                       <div className="table-card">
-                        <table className="table">
+                        <table className="books_table">
                           <thead className="table__header">
                             <tr>
                               <th className="table__header-item">

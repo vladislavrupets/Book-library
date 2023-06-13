@@ -2,6 +2,8 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
 }
 .main-body__slider {
   width: calc(100vw - 230px - 40px);
