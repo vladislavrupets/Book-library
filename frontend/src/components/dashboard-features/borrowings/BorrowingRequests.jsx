@@ -38,7 +38,8 @@ const BorrowingRequests = () => {
 
   const checkStartDate = (startDate) => {
     const today = new Date().toISOString().split("T")[0];
-    return startDate < today;
+    const formattedStartDate = new Date(startDate).toISOString().split("T")[0];
+    return formattedStartDate <= today;
   };
 
   return (

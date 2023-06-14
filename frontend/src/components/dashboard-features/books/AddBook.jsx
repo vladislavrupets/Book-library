@@ -177,7 +177,8 @@ const AddBook = () => {
       case "Authors":
         setAuthors((prevAuthors) => {
           const updatedAuthors = [...prevAuthors];
-          if (inputContent.index) {
+          console.log(inputContent.index);
+          if (inputContent.index !== undefined) {
             updatedAuthors[inputContent.index] = {
               full_name: inputContent.value,
             };

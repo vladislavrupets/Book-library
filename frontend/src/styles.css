@@ -189,6 +189,10 @@ button {
   transform: scale(0.95);
 }
 
+.main-button.cancel {
+  background-color: #ff3030;
+}
+
 .main-button span {
   margin-top: 1px;
   font-family: inherit;

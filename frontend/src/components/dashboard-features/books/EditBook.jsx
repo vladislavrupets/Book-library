@@ -7,12 +7,18 @@ import {
   Check,
   SearchOutlined,
   QuestionMark,
+  Clear,
   Edit,
   DeleteOutline,
 } from "@mui/icons-material";
 
 import "./dashBook.css";
-import { addBook, fetchBookById, searchBooks } from "../../../store/bookSlice";
+import {
+  updateBook,
+  deleteBook,
+  fetchBookById,
+  searchBooks,
+} from "../../../store/bookSlice";
 import Input from "../../custom-elements/input/Input";
 import Pagination from "../../custom-elements/pagination/Pagination";
 
@@ -20,6 +26,7 @@ const itemsPerPage = 3;
 
 const EditBook = () => {
   const { bookId } = useParams();
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const { books, booksCount, status, error } = useSelector(
@@ -197,7 +204,7 @@ const EditBook = () => {
       case "Genres":
         setGenres((prevGenres) => {
           const updatedGenres = [...prevGenres];
-          if (inputContent.index) {
+          if (inputContent.index !== undefined) {
             updatedGenres[inputContent.index] = {
               genre_name: inputContent.value,
             };
@@ -210,7 +217,7 @@ const EditBook = () => {
       case "Authors":
         setAuthors((prevAuthors) => {
           const updatedAuthors = [...prevAuthors];
-          if (inputContent.index) {
+          if (inputContent.index !== undefined) {
             updatedAuthors[inputContent.index] = {
               full_name: inputContent.value,
             };
@@ -246,10 +253,11 @@ const EditBook = () => {
     }
   }, [isInputVisible]);
 
-  const handleClickSubmit = async () => {
+  const handleClickConfirmChanges = async () => {
     try {
       await dispatch(
-        addBook({
+        updateBook({
+          book_id: bookId,
           writing,
           genres,
           authors,
@@ -260,16 +268,16 @@ const EditBook = () => {
           coverUrl: cover,
         })
       ).unwrap();
-      setCover("");
-      setWriting("");
-      setGenres([]);
-      setAuthors([]);
-      setPublisher("");
-      setReleaseYear("");
-      setPagesCount("");
-      setQuantity("");
-      setInputSearchContent("");
-      dispatch(searchBooks({ currentPage, itemsPerPage, searchData: "" }));
+      navigate("/dashboard/books/book-list");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleClickDeleteBook = async () => {
+    try {
+      await dispatch(deleteBook(bookId)).unwrap();
+      navigate("/dashboard/books/book-list");
     } catch (err) {
       console.error(err);
     }
@@ -649,6 +657,13 @@ const EditBook = () => {
 
                 <div className="card__body-buttons">
                   <button
+                    className="main-button cancel visible"
+                    onClick={handleClickDeleteBook}
+                  >
+                    <Clear />
+                    <h4>Delete</h4>
+                  </button>
+                  <button
                     className="main-button visible"
                     disabled={
                       !writing ||
@@ -659,10 +674,10 @@ const EditBook = () => {
                       !pagesCount ||
                       !quantity
                     }
-                    onClick={handleClickSubmit}
+                    onClick={handleClickConfirmChanges}
                   >
-                    <Add />
-                    <h4>Submit</h4>
+                    <Check />
+                    <h4>Confirm changes</h4>
                   </button>
                 </div>
               </div>

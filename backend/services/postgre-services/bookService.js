@@ -313,7 +313,238 @@ class BookService {
     }
   }
 
-  async updateBook() {}
+  async updateBook(book, category) {
+    try {
+      await pgPool(category).query("begin");
+
+      const {
+        book_id,
+        writing,
+        genres,
+        authors,
+        publisher,
+        releaseYear,
+        pagesCount,
+        quantity,
+        coverUrl,
+      } = book;
+
+      const bookData = await pgPool(category).query(
+        `select au.author_id, wr.writing_id
+        from Book b
+        join Writing wr ON wr.writing_id = b.writing_num
+        join WritingAuthor wa ON wa.writing_num = wr.writing_id
+        join Author au ON au.author_id = wa.author_num
+        where b.book_id = $1`,
+        [book_id]
+      );
+      const writingId = bookData.rows[0].writing_id;
+      const authorIds = bookData.rows.map((row) => row.author_id);
+
+      let newWritingData = null;
+      if (writing.writing_id) {
+        newWritingData = await writingService.getWritingById(
+          writing.writing_id,
+          category
+        );
+      } else {
+        newWritingData = await writingService.createWriting(
+          writing.title,
+          category
+        );
+      }
+      const newWritingId = newWritingData.writing_id;
+
+      const genresNames = genres.map((genre) => genre.genre_name);
+      await genreService.createGenre(genresNames, category);
+      const newGenresData = await genreService.getGenresIdByName(
+        genresNames,
+        category
+      );
+      const newGenresIds = newGenresData.map((genredata) => genredata.genre_id);
+
+      const authorsNames = authors
+        .filter((author) => !author.author_id)
+        .map((author) => author.full_name);
+      let newAuthorsData = [];
+      if (authorsNames.length > 0) {
+        newAuthorsData = await authorService.createAuthor(
+          authorsNames,
+          category
+        );
+      }
+
+      const newAuthorsIds = [
+        ...authors
+          .filter((author) => author.author_id)
+          .map((author) => author.author_id),
+        ...newAuthorsData
+          .filter((authordata) => authordata.author_id)
+          .map((authordata) => authordata.author_id),
+      ];
+
+      let newPublisherData = null;
+      newPublisherData = await publisherService.createPublisher(
+        publisher.publisher_name,
+        category
+      );
+      if (!newPublisherData) {
+        newPublisherData = await publisherService.getPublisherIdByName(
+          publisher.publisher_name,
+          category
+        );
+      }
+      const newPublisherId = newPublisherData.publisher_id;
+
+      await writingGenreService.createWritingGenre(
+        newWritingId,
+        newGenresIds,
+        category
+      );
+      await pgPool(category).query(
+        `delete from WritingGenre
+          where writing_num = $1
+          and genre_num not in
+          (select unnest($2::uuid[]))`,
+        [writingId, newGenresIds]
+      );
+
+      await writingAuthorService.createWritingAuthor(
+        newWritingId,
+        newAuthorsIds,
+        category
+      );
+      await pgPool(category).query(
+        `delete from WritingAuthor
+          where writing_num = $1
+          and author_num not in
+          (select unnest($2::uuid[]))`,
+        [writingId, newAuthorsIds]
+      );
+
+      await pgPool(category).query(
+        `update Book
+          set writing_num = $2, release_year = $3, publisher_num = $4, 
+          pages_count = $5, quantity = $6, cover_url = $7
+          where book_id = $1
+          returning *`,
+        [
+          book_id,
+          newWritingId,
+          releaseYear,
+          newPublisherId,
+          pagesCount,
+          quantity,
+          coverUrl,
+        ]
+      );
+
+      const writingInBooksData = await pgPool(category).query(
+        `select * from Book
+        where writing_num = $1`,
+        [writingId]
+      );
+
+      if (writingInBooksData.rowCount === 0) {
+        await pgPool(category).query(
+          `with deleted_writing_genre AS (
+        delete from WritingGenre
+        where writing_num = $1
+        ),
+        deleted_writing_author AS (
+          delete from WritingAuthor
+          where writing_num = $1
+        )
+        delete from Writing
+        where writing_id = $1`,
+          [bookData.rows[0].writing_num]
+        );
+
+        await pgPool(category).query(
+          `delete from Author
+        where author_id = $1
+        and not exists (
+        select 1
+        from WritingAuthor
+        where author_num = any(string_to_array($2, ',')::uuid[]))`,
+          [authorIds[0], authorIds.join(",")]
+        );
+      }
+
+      await pgPool(category).query("commit");
+    } catch (err) {
+      await pgPool(category).query("rollback");
+      console.error(err);
+      throw { code: 500 };
+    }
+  }
+
+  async deleteBook(bookId, category) {
+    try {
+      await pgPool(category).query("begin");
+
+      const bookData = await pgPool(category).query(
+        `select au.author_id, wr.writing_id
+        from Book b
+        join Writing wr ON wr.writing_id = b.writing_num
+        join WritingAuthor wa ON wa.writing_num = wr.writing_id
+        join Author au ON au.author_id = wa.author_num
+        where b.book_id = $1`,
+        [bookId]
+      );
+      const writingId = bookData.rows[0].writing_id;
+      const authorIds = bookData.rows.map((row) => row.author_id);
+
+      await pgPool(category).query(
+        `with deleted_book_borrowing as (
+        delete from BookBorrowing
+        where book_num = $1
+        )
+        delete from Book
+        where book_id = $1`,
+        [bookId]
+      );
+
+      const writingInBooksData = await pgPool(category).query(
+        `select * from Book
+        where writing_num = $1`,
+        [writingId]
+      );
+
+      if (writingInBooksData.rowCount === 0) {
+        await pgPool(category).query(
+          `with deleted_writing_genre AS (
+        delete from WritingGenre
+        where writing_num = $1
+        ),
+        deleted_writing_author AS (
+          delete from WritingAuthor
+          where writing_num = $1
+        )
+        delete from Writing
+        where writing_id = $1`,
+          [bookData.rows[0].writing_num]
+        );
+
+        await pgPool(category).query(
+          `delete from Author
+          where author_id = $1
+          and not exists (
+            select 1
+            from WritingAuthor
+            where author_num = any(string_to_array($2, ',')::uuid[])
+          )`,
+          [authorIds[0], authorIds.join(",")]
+        );
+      }
+
+      await pgPool(category).query("commit");
+    } catch (err) {
+      await pgPool(category).query("rollback");
+      console.error(err);
+      throw { code: 500 };
+    }
+  }
 }
 
 module.exports = new BookService();

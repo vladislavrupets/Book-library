@@ -10,6 +10,8 @@ router.get(
   bookController.searchBooks
 );
 router.get("/get-by-id/:bookId", bookController.getBookById);
+router.post("/update-book", bookController.updateBook);
+router.post("/delete-book", bookController.deleteBook);
 // router.get("/writing/get-all", bookController.getWritings);
 // router.get("/writing/search/:searchTerm", bookController.searchWritings);
 // router.get("/genre/get-all", bookController.getGenres);
