@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 import "./dashboardSidebar.css";
 import DropdownSelect from "../../custom-elements/dropdown-select/DropdownSelect";
@@ -20,14 +21,6 @@ const dropdownOptions = {
       title: "User list",
       link: "/dashboard/users/users-list",
     },
-    {
-      title: "Users stats",
-      link: "/dashboard/users/users-stats",
-    },
-    {
-      title: "Add new user",
-      link: "/dashboard/users/add-user",
-    },
   ],
   borrowingsOptions: [
     {
@@ -42,10 +35,22 @@ const dropdownOptions = {
 };
 
 const DashboardSidebar = () => {
+  const { authInfo } = useSelector((state) => state.auth);
   return (
     <div className="dash-sidebar">
-      <DropdownSelect title={"Books"} options={dropdownOptions.booksOptions} />
-      <DropdownSelect title={"Users"} options={dropdownOptions.usersOptions} />
+      {authInfo.category === "administrator" && (
+        <>
+          <DropdownSelect
+            title={"Books"}
+            options={dropdownOptions.booksOptions}
+          />
+
+          <DropdownSelect
+            title={"Users"}
+            options={dropdownOptions.usersOptions}
+          />
+        </>
+      )}
       <DropdownSelect
         title={"Borrowings"}
         options={dropdownOptions.borrowingsOptions}

@@ -14,6 +14,7 @@ const MainBody = () => {
   const { books, booksCount, status, error } = useSelector(
     (state) => state.book
   );
+  const { authInfo } = useSelector((state) => state.auth);
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
@@ -51,6 +52,7 @@ const MainBody = () => {
                             releaseYear={book.release_year}
                             coverUrl={book.cover_url}
                             key={book.book_id}
+                            isAuth={authInfo.category !== "guest"}
                           />
                         )
                     )}

@@ -5,6 +5,7 @@ import { Check } from "@mui/icons-material";
 import {
   getBorrowingRequests,
   approveBorrowing,
+  rejectBorrowing,
 } from "../../../store/borrowingSlice";
 
 import Pagination from "../../custom-elements/pagination/Pagination";
@@ -16,6 +17,7 @@ const BorrowingRequests = () => {
   const { borrowings, borrowingsCount, status, error } = useSelector(
     (state) => state.borrowing
   );
+  const { authInfo } = useSelector((state) => state.auth);
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -30,6 +32,15 @@ const BorrowingRequests = () => {
   const handleClickAccept = (borrowingId) => {
     try {
       dispatch(approveBorrowing(borrowingId)).unwrap();
+    } catch (err) {
+      console.error(err);
+    }
+    dispatch(getBorrowingRequests());
+  };
+
+  const handleClickReject = (borrowingId) => {
+    try {
+      dispatch(rejectBorrowing(borrowingId)).unwrap();
     } catch (err) {
       console.error(err);
     }
@@ -69,6 +80,11 @@ const BorrowingRequests = () => {
                           </th>
                           <th className="table__header-item">
                             <div className="table__header-item--content">
+                              Trust rating
+                            </div>
+                          </th>
+                          <th className="table__header-item">
+                            <div className="table__header-item--content">
                               Book
                             </div>
                           </th>
@@ -87,6 +103,13 @@ const BorrowingRequests = () => {
                               Accept borrowing
                             </div>
                           </th>
+                          {authInfo.category === "administrator" && (
+                            <th className="table__header-item">
+                              <div className="table__header-item--content">
+                                Reject borrowing
+                              </div>
+                            </th>
+                          )}
                         </tr>
                       </thead>
                       <tbody className="table__body">
@@ -99,6 +122,13 @@ const BorrowingRequests = () => {
                               <div className="table__row-item--content">
                                 <div className="table__row-item--content-inner">
                                   {borrowing.login}
+                                </div>
+                              </div>
+                            </td>
+                            <td className="table__row-item">
+                              <div className="table__row-item--content">
+                                <div className="table__row-item--content-inner">
+                                  {borrowing.trust_rating}
                                 </div>
                               </div>
                             </td>
@@ -148,6 +178,25 @@ const BorrowingRequests = () => {
                                 </div>
                               </div>
                             </td>
+                            {authInfo.category === "administrator" && (
+                              <td className="table__row-item">
+                                <div className="table__row-item--content">
+                                  <div className="table__row-item--content-inner">
+                                    <button
+                                      className="main-button visible"
+                                      onClick={() =>
+                                        handleClickReject(
+                                          borrowing.borrowing_id
+                                        )
+                                      }
+                                    >
+                                      <Check fontSize="small" />
+                                      <span>Reject</span>
+                                    </button>
+                                  </div>
+                                </div>
+                              </td>
+                            )}
                           </tr>
                         ))}
                       </tbody>

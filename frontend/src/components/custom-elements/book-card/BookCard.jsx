@@ -3,8 +3,24 @@ import { useNavigate } from "react-router-dom";
 import "./bookCard.css";
 import { Add } from "@mui/icons-material";
 
-const BookCard = ({ bookId, title, author, genre, releaseYear, coverUrl }) => {
+const BookCard = ({
+  bookId,
+  title,
+  author,
+  genre,
+  releaseYear,
+  coverUrl,
+  isAuth,
+}) => {
   const navigate = useNavigate();
+
+  const handleClickToBorrow = () => {
+    if (isAuth) {
+      navigate(`/book-borrowing/${bookId}`);
+    } else {
+      navigate("/login");
+    }
+  };
 
   return (
     <div className="book-card">
@@ -26,10 +42,7 @@ const BookCard = ({ bookId, title, author, genre, releaseYear, coverUrl }) => {
         </div>
       </div>
 
-      <button
-        className="main-button visible"
-        onClick={() => navigate(`/book-borrowing/${bookId}`)}
-      >
+      <button className="main-button visible" onClick={handleClickToBorrow}>
         <Add />
         <h4>To borrow</h4>
       </button>

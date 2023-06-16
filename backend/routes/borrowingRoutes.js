@@ -8,5 +8,6 @@ router.get("/get-borrowing-requests", borrowingController.getBorrowingRequests);
 router.get("/get-active-borrowings", borrowingController.getActiveBorrowings);
 router.post("/approve-borrowing", borrowingController.approveBorrowing);
 router.post("/return-book", borrowingController.approveReturn);
+router.post("/reject-borrowing", borrowingController.rejectBorrowing);
 
 module.exports = router;

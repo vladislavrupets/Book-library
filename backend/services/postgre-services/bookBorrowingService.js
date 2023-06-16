@@ -9,10 +9,15 @@ class bookBorrowingService {
                 returning *`,
         [user_id, book_id, start_date, end_date]
       );
+      console.log(borrowingData.rows[0]);
       return borrowingData.rows[0];
     } catch (err) {
-      console.error(err);
-      throw { code: 500 };
+      if (err.code === "P0001" && err.message === "You have debts") {
+        throw { code: 400, message: "You have debts" };
+      } else {
+        console.error(err);
+        throw { code: 500, message: "Internal server error." };
+      }
     }
   }
 
@@ -45,7 +50,7 @@ class bookBorrowingService {
   async getPendingBorrowings(category) {
     try {
       const borrowingData = await pgPool(category).query(
-        `select bb.borrowing_id, u.login, w.title, bb.start_date, bb.end_date
+        `select bb.borrowing_id, u.login, u.trust_rating, w.title, bb.start_date, bb.end_date
           from BookBorrowing bb
           join Users u on u.user_id = bb.reader_num
           join Book b on b.book_id = bb.book_num
@@ -169,11 +174,26 @@ class bookBorrowingService {
 
   async updateBorrowingStatusToReturned(borrowing_id, end_date, category) {
     try {
+      console.log(borrowing_id, end_date);
       await pgPool(category).query(
         `update BookBorrowing
       set status = 'completed', end_date = $1
       where borrowing_id = $2`,
         [end_date, borrowing_id]
+      );
+    } catch (err) {
+      console.error(err);
+      throw { code: 500 };
+    }
+  }
+
+  async updateBorrowingStatusToRejected(borrowing_id, category) {
+    try {
+      await pgPool(category).query(
+        `update BookBorrowing
+      set status = 'rejected'
+      where borrowing_id = $1`,
+        [borrowing_id]
       );
     } catch (err) {
       console.error(err);

@@ -46,6 +46,21 @@ export const approveReturn = createAsyncThunk(
   }
 );
 
+export const rejectBorrowing = createAsyncThunk(
+  "borrowings/rejectBorrowing",
+  async (borrowingId, { rejectWithValue }) => {
+    console.log(borrowingId);
+    try {
+      const response = await Axios.post("/borrowings/reject-borrowing", {
+        borrowingId,
+      });
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 export const getBorrowingRequests = createAsyncThunk(
   "borrowings/getBorrowingRequests",
   async (_, { rejectWithValue }) => {

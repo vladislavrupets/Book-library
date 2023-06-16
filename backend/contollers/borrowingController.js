@@ -14,6 +14,7 @@ class BorrowingController {
       res.status(200).json(newBorrowing);
     } catch (err) {
       if (err.code === 400) {
+        console.log(err.message);
         res.status(400).json(err.message);
       } else {
         res.status(500).json("Internal server error");
@@ -92,6 +93,23 @@ class BorrowingController {
       await bookBorrowingService.updateBorrowingStatusToReturned(
         borrowingId,
         actualEndDate,
+        category
+      );
+      res.status(200).send();
+    } catch (err) {
+      if (err.code === 400) {
+        res.status(400).json(err.message);
+      } else {
+        res.status(500).json("Internal server error");
+      }
+    }
+  }
+
+  async rejectBorrowing(req, res) {
+    try {
+      const { borrowingId, category } = req.body;
+      await bookBorrowingService.updateBorrowingStatusToRejected(
+        borrowingId,
         category
       );
       res.status(200).send();

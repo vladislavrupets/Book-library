@@ -13,6 +13,19 @@ export const getUserBorrowingsbyLogin = createAsyncThunk(
   }
 );
 
+export const getUsers = createAsyncThunk(
+  "users/getUsers",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await Axios.get(`/users/get-users`);
+      console.log(res.data);
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "users",
   initialState: {
@@ -35,6 +48,19 @@ const userSlice = createSlice({
         state.borrowingsCount = action.payload.borrowingsCount;
       })
       .addCase(getUserBorrowingsbyLogin.rejected, (state, action) => {
+        state.status = "rejected";
+        state.error = action.payload;
+      })
+
+      .addCase(getUsers.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(getUsers.fulfilled, (state, action) => {
+        state.status = "resolved";
+        state.users = action.payload;
+      })
+      .addCase(getUsers.rejected, (state, action) => {
         state.status = "rejected";
         state.error = action.payload;
       });

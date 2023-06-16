@@ -3,7 +3,9 @@ const pgPool = require("./dbConfig");
 class UserService {
   async getUsers(category) {
     try {
-      const usersData = await pgPool(category).query("select * from Users");
+      const usersData = await pgPool(category).query(
+        "select * from Users where category='reader' ORDER BY trust_rating DESC"
+      );
       return usersData.rows;
     } catch (err) {
       console.error(err);
