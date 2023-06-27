@@ -26,6 +26,7 @@
   position: fixed;
   width: 230px;
   height: 100%;
+  background-color: #f6f8fc;
 }
 
 @media screen and (max-width: 767px) {
@@ -42,6 +43,7 @@
   display: flex;
   flex: 1;
   overflow: hidden;
+  background-color: #f6f8fc;
 }
 
 .inner-container__content.with-aside {

@@ -26,34 +26,36 @@ const LoginPage = () => {
   };
 
   return (
-    <form className="auth-container" onSubmit={handleSubmit}>
-      <h2 className="auth-header">Login</h2>
-      <span className="auth-error">{error}</span>
-      <input
-        className={Login ? "auth-input valid" : "auth-input"}
-        type="text"
-        placeholder="Login"
-        value={Login}
-        onChange={(e) => setLogin(e.target.value)}
-      />
-      <input
-        className={password ? "auth-input valid" : "auth-input"}
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+    <div className="parent-container">
+      <form className="auth-container" onSubmit={handleSubmit}>
+        <h2 className="auth-header">Login</h2>
+        <span className="auth-error">{error}</span>
+        <input
+          className={Login ? "auth-input valid" : "auth-input"}
+          type="text"
+          placeholder="Login"
+          value={Login}
+          onChange={(e) => setLogin(e.target.value)}
+        />
+        <input
+          className={password ? "auth-input valid" : "auth-input"}
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-      <button
-        disabled={!(Login && password)}
-        className={Login && password ? "submit-btn active" : "submit-btn"}
-      >
-        Log in
-      </button>
-      <span className="auth-link" onClick={() => navigate("/register")}>
-        Don't have an account?
-      </span>
-    </form>
+        <button
+          disabled={!(Login && password)}
+          className={Login && password ? "submit-btn active" : "submit-btn"}
+        >
+          Log in
+        </button>
+        <span className="auth-link" onClick={() => navigate("/register")}>
+          Don't have an account?
+        </span>
+      </form>
+    </div>
   );
 };
 
