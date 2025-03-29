@@ -1,50 +1,52 @@
-# Book-library 
-Library loan service
+# 📚 Book Library - Loan Service
 
-## Features
+A comprehensive library loan service designed to manage book borrowing, user roles, and administrative tasks efficiently.
 
-- Separation of users by roles (reader, librarian administrator) at the UI and database level
-- Reader rating system (trust rating)
-- Authorization and authentication using express session, password hashing
-- Viewing a list of books with pagination
-- Books borrowing
-- Dashboard for librarians and administrators
-- Adding and editing books with checking for uniqueness(administrator)
-- Managing the process of receiving and returning books (administrator, librarian)
+## 🌟 Features
 
-## Technologies
+- 👥 **User Roles & Permissions**: Separation of users into **Reader**, **Librarian**, and **Administrator** roles at both UI and database levels
+- ⭐ **Reader Trust Rating**: System for tracking and evaluating reader reliability
+- 🔐 **Secure Authentication**: Authorization and authentication using Express sessions with password hashing
+- 📖 **Book Catalog**: View a paginated list of books
+- 📚 **Book Borrowing**: Readers can request and borrow books
+- 📊 **Admin & Librarian Dashboard**: Manage book inventory and borrowing requests
+- ✏️ **Book Management**: Add and edit books with uniqueness validation (Admin)
+- 🔄 **Borrowing & Returning Books**: Administrators and librarians can handle the lending process
 
-- Backend: Node.js, express, pg, express-session
-- Frontend: Vite React, Redux toolkit
-- Database: PostgreSQL
+## 🛠 Technologies
 
-## Interface demo (main features)
+- ⚙️ **Backend**: Node.js, Express, PostgreSQL, Express-session
+- 🎨 **Frontend**: Vite React, Redux Toolkit
+- 🗄 **Database**: PostgreSQL
 
-### Registration page
+## 🖥 Interface Demo (Main Features)
+
+### 📝 Registration Page
 ![Registration page](frontend/src/images/readme-registration.png)
 
-### Login page
+### 🔑 Login Page
 ![Login page](frontend/src/images/readme-login.png)
 
-### Home page
+### 🏠 Home Page
 ![Reader main page](frontend/src/images/readme-main-page.png)
 
-### Book borrowing page
+### 📚 Book Borrowing Page
 ![Book borrowing page](frontend/src/images/readme-borrowing-page.png)
 
-### Reader borrowing history
+### 🕘 Reader Borrowing History
 ![Reader borrowing history](frontend/src/images/readme-borrowing-list.png)
 
-### Administrator/ librarian dashboard
+### 📊 Administrator & Librarian Dashboard
+#### 📖 Book List
 ![Book list](frontend/src/images/readme-book-list.png)
 
+#### ➕ Add Book
 ![Add book](frontend/src/images/readme-add-book.png)
 
+#### ✏️ Edit Book
 ![Edit book](frontend/src/images/readme-edit-book.png)
 
+#### 📩 Borrowing Requests
 ![Borrowing requests](frontend/src/images/readme-borrowing-requests.png)
 
-
-
-
-
+🚀 **Efficiently manage your library with Book Library!**
